@@ -2,39 +2,46 @@ $(function(){
 
 	window.SpriteLibrary = window.SpriteLibrary || {};
 
-	SpriteLibrary.drawLion = function(lionInst){
+	SpriteLibrary.drawLion = function(lionInst) {
 
-		var maneLength = 75;
-		var maneRadius = maneLength / 3;
-		var headLength = maneLength / 5;
-		lionInst.ctx.save();
-		lionInst.ctx.fillStyle = "rgb(255,178,102)";
-		drawLionTail(lionInst.ctx,maneLength / 3,lionInst.tailTilt);
-		drawLionBody(lionInst.ctx,maneRadius);
-		drawLionMane(lionInst.ctx,maneRadius);
-		drawLionHead(lionInst.ctx,headLength,lionInst.jawLength);
-		lionInst.ctx.restore();
+		var ctx = lionInst.ctx || document.getElementById("canvas").getContext("2d");
+		var jawLength = lionInst.jawLength || 5;
+		var tailTilt = lionInst.tailTilt || (-5.5 * Math.PI / 8)
+
+		var maneRadius = 25;
+		var headLength = 3 * maneRadius / 5;
+
+		ctx.save();
+		ctx.fillStyle = "rgb(255,178,102)";
+		drawLionTail(ctx,maneRadius,tailTilt);
+		drawLionBody(ctx,maneRadius);
+		drawLionMane(ctx,maneRadius);
+		drawLionHead(ctx,headLength,jawLength);
+		ctx.restore();
 	};
 
-	var drawLionTail = function(ctx,maneRadius,tailTilt){
+	var drawLionTail = function(ctx,maneRadius,tailTilt) {
+
+		var tailTipLength = maneRadius / 16;
+		var tailTipWidth = maneRadius / 4;
 
 		ctx.save();
 		ctx.translate(0,1.25 * maneRadius);
 		ctx.rotate(tailTilt);
-		ctx.fillRect(0,0,maneRadius / 16,2 * maneRadius);
+		ctx.fillRect(0,0,tailTipLength,2 * maneRadius);
 		ctx.save();
-		ctx.translate(maneRadius / 32,2 * maneRadius);
+		ctx.translate(tailTipLength / 2,2 * maneRadius);
 		ctx.fillStyle = "rgb(51,25,0)";
 		ctx.beginPath();
 		ctx.moveTo(0,0);
-		ctx.bezierCurveTo(0,0,-maneRadius / 8,maneRadius / 16,0,maneRadius / 4);
-		ctx.bezierCurveTo(0,maneRadius / 4,maneRadius / 8,maneRadius / 16,0,0);
+		ctx.bezierCurveTo(0,0,-tailTipWidth / 2,tailTipLength,0,tailTipWidth);
+		ctx.bezierCurveTo(0,tailTipWidth,tailTipWidth / 2,tailTipLength,0,0);
 		ctx.fill();
 		ctx.restore();
 		ctx.restore();
 	};
 
-	var drawLionBody = function(ctx,maneRadius){
+	var drawLionBody = function(ctx,maneRadius) {
 
 		ctx.save();
 		ctx.translate(0,1.5 * maneRadius);
@@ -59,61 +66,72 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionLeg = function(ctx,maneRadius){
+	var drawLionLeg = function(ctx,maneRadius) {
+
+		var legWidth = maneRadius / 3.5;
 
 		ctx.save();
 		ctx.beginPath();
-		ctx.ellipse(0,0,maneRadius / 10,maneRadius / 3.5,0,Math.PI,false);
+		ctx.ellipse(0,0,maneRadius / 10,legWidth,0,Math.PI,false);
 		ctx.fill();
 		ctx.save();
-		ctx.translate(0,-maneRadius / 3.5);
+		ctx.translate(0,-legWidth);
 		drawLionClaws(ctx,maneRadius);
 		ctx.restore();
 		ctx.restore();
 	};
 
-	var drawLionClaws = function(ctx,maneRadius){
+	var drawLionClaws = function(ctx,maneRadius) {
+
+		var clawSeparation = maneRadius / 50;
+		var clawLength = maneRadius / 20;
+		var lineWidth = maneRadius / 64;
 
 		ctx.save();
 		ctx.save();
-		ctx.translate(maneRadius / 50,0);
+		ctx.translate(clawSeparation,0);
 		ctx.beginPath();
 		ctx.strokeStyle = "rgb(0,0,0)";
 		ctx.moveTo(0,0);
-		ctx.lineTo(0,maneRadius / 20);
-		ctx.lineWidth = maneRadius / 64;
+		ctx.lineTo(0,clawLength);
+		ctx.lineWidth = lineWidth;
 		ctx.stroke();
 		ctx.restore();
 		ctx.save();
-		ctx.translate(-maneRadius / 50,0);
+		ctx.translate(-clawSeparation,0);
 		ctx.beginPath();
 		ctx.strokeStyle = "rgb(0,0,0)";
 		ctx.moveTo(0,0);
-		ctx.lineTo(0,maneRadius / 20);
-		ctx.lineWidth = maneRadius / 64;
+		ctx.lineTo(0,clawLength);
+		ctx.lineWidth = lineWidth;
 		ctx.stroke();
 		ctx.restore();
 		ctx.restore();
 	};
 
-	var drawLionLegs = function(ctx,maneRadius){
+	var drawLionLegs = function(ctx,maneRadius) {
+
+		var legGap = 15 * maneRadius / 16;
+		var legDistance = -maneRadius / 10;
+		var legRotation = Math.PI / 2;
 
 		ctx.save();
-		ctx.translate(15 * maneRadius / 16,-maneRadius / 10);
-		ctx.rotate(Math.PI / 2);
+		ctx.translate(legGap,legDistance);
+		ctx.rotate(legRotation);
 		drawLionLeg(ctx,maneRadius);
 		ctx.restore();
 		ctx.save();
-		ctx.translate(-15 * maneRadius / 16,-maneRadius / 10);
-		ctx.rotate(-Math.PI / 2);
+		ctx.translate(-legGap,legDistance);
+		ctx.rotate(-legRotation);
 		drawLionLeg(ctx,maneRadius);
 		ctx.restore();
 	};
 
-	var drawLionArm = function(ctx,maneRadius){
+	var drawLionArm = function(ctx,maneRadius) {
 
 		var armWidth = maneRadius / 5;
 		var armLength = 7 * maneRadius / 10;
+
 		ctx.save();
 		ctx.fillRect(0,0,armWidth,armLength);
 		ctx.translate(armWidth / 2,armLength);
@@ -122,43 +140,50 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionArms = function(ctx,maneRadius){
+	var drawLionArms = function(ctx,maneRadius) {
+
+		var armGap = maneRadius / 5;
 
 		ctx.save();
 		ctx.save();
-		ctx.translate((-maneRadius / 5) - maneRadius / 5,0);
+		ctx.translate(-2 * armGap,0);
 		drawLionArm(ctx,maneRadius);
 		ctx.restore();
 		ctx.save();
-		ctx.translate(maneRadius / 5,0);
+		ctx.translate(armGap,0);
 		drawLionArm(ctx,maneRadius);
 		ctx.restore();
 		ctx.restore();
 	};
 
-	var drawLionLegGap = function(ctx,maneRadius){
+	var drawLionLegGap = function(ctx,maneRadius) {
+
+		var lineWidth = maneRadius / 128;
+		var gapColor = "rgb(255,160,102)";
+		var gapSize = maneRadius / 16;
+		var gapDistance = maneRadius / 32;
 
 		ctx.save();
 		ctx.save();
-		ctx.translate(-maneRadius / 32,0);
+		ctx.translate(-gapDistance,0);
 		ctx.beginPath();
-		ctx.strokeStyle = "rgb(255,160,102)";
-		ctx.lineWidth = maneRadius / 128;
-		ctx.bezierCurveTo(0,0,maneRadius/16,-maneRadius / 16,-maneRadius / 16,-maneRadius / 8);
+		ctx.strokeStyle = gapColor;
+		ctx.lineWidth = lineWidth;
+		ctx.bezierCurveTo(0,0,gapSize,-gapSize,-gapSize,-2 * gapSize);
 		ctx.stroke();
 		ctx.restore();
 		ctx.save();
-		ctx.translate(maneRadius / 32,0);
+		ctx.translate(gapDistance,0);
 		ctx.beginPath();
-		ctx.strokeStyle = "rgb(255,160,102)";
-		ctx.lineWidth = maneRadius / 128;
-		ctx.bezierCurveTo(0,0,-maneRadius/16,-maneRadius / 16,maneRadius / 16,-maneRadius / 8);
+		ctx.strokeStyle = gapColor;
+		ctx.lineWidth = lineWidth;
+		ctx.bezierCurveTo(0,0,-gapSize,-gapSize,gapSize,-2 * gapSize);
 		ctx.stroke();
 		ctx.restore();
 		ctx.restore();
 	};
 
-	var drawLionMane = function(ctx,maneRadius){
+	var drawLionMane = function(ctx,maneRadius) {
 
 		ctx.save();
 		ctx.beginPath();
@@ -168,7 +193,7 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionHead = function(ctx,headLength,jawLength){
+	var drawLionHead = function(ctx,headLength,jawLength) {
 
 		ctx.save();
 		drawLionEarPair(ctx,headLength);
@@ -184,9 +209,10 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionEar = function(ctx,headLength){
+	var drawLionEar = function(ctx,headLength) {
 
 		var earLength = headLength / 8;
+
 		ctx.save();
 		ctx.beginPath();
 		ctx.fillStyle = "rgb(255,153,255)";
@@ -198,19 +224,22 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionEarPair = function(ctx,headLength){
+	var drawLionEarPair = function(ctx,headLength) {
+
+		var earPositionX = 3 * headLength / 4;
+		var earPositionY = -7 * headLength / 10;
 
 		ctx.save();
-		ctx.translate(-3 * headLength / 4,-7 * headLength / 10);
+		ctx.translate(-earPositionX,earPositionY);
 		drawLionEar(ctx,headLength);
 		ctx.restore();
 		ctx.save();
-		ctx.translate(3 * headLength / 4,-7 * headLength / 10);
+		ctx.translate(earPositionX,earPositionY);
 		drawLionEar(ctx,headLength);
 		ctx.restore();
 	};
 
-	var drawLionEye = function(ctx,headLength){
+	var drawLionEye = function(ctx,headLength) {
 
 		ctx.save();
 		ctx.beginPath();
@@ -220,22 +249,24 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionEyes = function(ctx,headLength){
+	var drawLionEyes = function(ctx,headLength) {
+
+		var eyeDistance = headLength / 4;
 
 		ctx.save();
-		ctx.translate(0,-headLength / 4);
+		ctx.translate(0,-eyeDistance);
 		ctx.save();
-		ctx.translate(-headLength / 4,0);
+		ctx.translate(-eyeDistance,0);
 		drawLionEye(ctx,headLength);
 		ctx.restore();
 		ctx.save();
-		ctx.translate(headLength / 4,0);
+		ctx.translate(eyeDistance,0);
 		drawLionEye(ctx,headLength);
 		ctx.restore();
 		ctx.restore();
 	};
 
-	var drawLionMouth = function(ctx,headLength,jawLength){
+	var drawLionMouth = function(ctx,headLength,jawLength) {
 
 		ctx.save();
 		ctx.fillStyle = "rgb(255,102,102)";
@@ -244,10 +275,11 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionTooth = function(ctx,headLength,jawLength){
+	var drawLionTooth = function(ctx,headLength,jawLength) {
 
 		var toothWidth = headLength / 8;
 		var toothHeight = headLength / 10;
+
 		ctx.save();
 		ctx.beginPath();
 		ctx.fillStyle = "rgb(255,255,255)";
@@ -258,7 +290,7 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionToothPair = function(ctx,headLength,jawLength){
+	var drawLionToothPair = function(ctx,headLength,jawLength) {
 
 		ctx.save();
 		drawLionTooth(ctx,headLength,jawLength);
@@ -269,7 +301,7 @@ $(function(){
 		ctx.restore();		
 	};
 
-	var drawLionTeeth = function(ctx,headLength,jawLength){
+	var drawLionTeeth = function(ctx,headLength,jawLength) {
 
 		ctx.save();
 		drawLionToothPair(ctx,headLength,jawLength);
@@ -281,9 +313,10 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionNose = function(ctx,headLength){
+	var drawLionNose = function(ctx,headLength) {
 
 		var noseLength = headLength / 8;
+
 		ctx.save();
 		ctx.save();
 		ctx.beginPath();
@@ -301,9 +334,10 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawLionWhisker = function(ctx,headLength){
+	var drawLionWhisker = function(ctx,headLength) {
 
 		var whiskerLength = headLength / 2;
+
 		ctx.save();
 		ctx.beginPath();
 		ctx.strokeStyle = "rgb(0,0,0)";
@@ -313,7 +347,9 @@ $(function(){
 		ctx.stroke();
 		ctx.restore();
 	};
-	var drawLionWhiskers = function(ctx,headLength){
+	var drawLionWhiskers = function(ctx,headLength) {
+
+		var whiskerAngle = Math.PI / 12;
 
 		ctx.save();
 		drawLionWhisker(ctx,headLength);
@@ -322,19 +358,19 @@ $(function(){
 		drawLionWhisker(ctx,headLength);
 		ctx.restore();
 		ctx.save();
-		ctx.rotate(Math.PI / 12);
+		ctx.rotate(whiskerAngle);
 		drawLionWhisker(ctx,headLength);
 		ctx.restore();
 		ctx.save();
-		ctx.rotate(-Math.PI / 12);
+		ctx.rotate(-whiskerAngle);
 		drawLionWhisker(ctx,headLength);
 		ctx.restore();
 		ctx.save();
-		ctx.rotate(11 * Math.PI / 12);
+		ctx.rotate(11 * whiskerAngle);
 		drawLionWhisker(ctx,headLength);
 		ctx.restore();
 		ctx.save();
-		ctx.rotate(-11 * Math.PI / 12);
+		ctx.rotate(-11 * whiskerAngle);
 		drawLionWhisker(ctx,headLength);
 		ctx.restore();
 		ctx.restore();
