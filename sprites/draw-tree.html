@@ -1,0 +1,39 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Canvas Drawing Separation</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="1920" height="1280">
+      <code></code>
+    </canvas>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="tree.js"></script>
+    <script type="text/javascript">
+    $(function(){
+
+      var canvas = $("#canvas")[0];
+      var renderingContext = canvas.getContext("2d");
+      renderingContext.save();
+      renderingContext.translate(200,500);
+      var treeInst = [
+      {
+
+        ctx : renderingContext,
+        treeCurve : 0
+      },
+      {
+
+        ctx : renderingContext,
+        treeCurve : 30
+      }];
+
+      renderingContext.scale(2,2);
+      SpriteLibrary.drawTree(treeInst[0]);
+      renderingContext.translate(120,0);
+      SpriteLibrary.drawTree(treeInst[1]);
+      renderingContext.restore();
+    }());
+    </script>
+  </body>
+</html>
