@@ -1,0 +1,49 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Canvas Drawing Separation</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="1920" height="1280">
+      <code></code>
+    </canvas>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="giraffe.js"></script>
+    <script src="lion.js"></script>
+    <script src="tree.js"></script>
+    <script type="text/javascript">
+    $(function(){
+
+      var canvas = $("#canvas")[0];
+      var renderingContext = canvas.getContext("2d");
+      renderingContext.save();
+      renderingContext.translate(200,400);
+      var SpriteInst = [
+      {
+
+        ctx : renderingContext,
+        treeCurve : -70
+      },
+      {
+
+        ctx : renderingContext,
+        neckTilt : Math.PI / 8,
+        tailTilt : 3 * Math.PI / 4
+      },
+      {
+
+        ctx : renderingContext,
+        jawLength : 10,
+        tailTilt : (-5.5 * Math.PI / 8)
+      }];
+      renderingContext.scale(2,2);
+      SpriteLibrary.drawGiraffe(SpriteInst[1]);
+      renderingContext.translate(150,70);
+      SpriteLibrary.drawTree(SpriteInst[0]);
+      renderingContext.translate(100,-25);
+      SpriteLibrary.drawLion(SpriteInst[2]);
+      renderingContext.restore(); 
+    }());
+    </script>
+  </body>
+</html>
