@@ -2,21 +2,26 @@ $(function(){
 
     window.SpriteLibrary = window.SpriteLibrary || {};
 
-    SpriteLibrary.drawGiraffe = function(giraffeInst){
+    SpriteLibrary.drawGiraffe = function(giraffeInst) {
 
+        var ctx = giraffeInst.ctx || document.getElementById("canvas").getContext("2d");
+        var neckTilt = giraffeInst.neckTilt || Math.PI;
+        var tailTilt = giraffeInst.tailTilt || -Math.PI;
+        
         var giraffeBodyLength = 100;
         var giraffeBodyHeight = giraffeBodyLength / 2;
-        giraffeInst.ctx.save();
-        giraffeInst.ctx.fillStyle = "rgb(255,221,44)";
-        drawGiraffeTail(giraffeInst.ctx,giraffeBodyLength,giraffeBodyHeight,giraffeInst.tailTilt);
-        drawGiraffeNeck(giraffeInst.ctx,giraffeBodyLength,giraffeBodyHeight,giraffeInst.neckTilt);
-        drawGiraffeBody(giraffeInst.ctx,giraffeBodyLength,giraffeBodyHeight);
-        drawGiraffeLegs(giraffeInst.ctx,giraffeBodyLength,giraffeBodyHeight);
-        giraffeInst.ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = "rgb(255,221,44)";
+        drawGiraffeTail(ctx,giraffeBodyLength,giraffeBodyHeight,tailTilt);
+        drawGiraffeNeck(ctx,giraffeBodyLength,giraffeBodyHeight,neckTilt);
+        drawGiraffeBody(ctx,giraffeBodyLength,giraffeBodyHeight);
+        drawGiraffeLegs(ctx,giraffeBodyLength,giraffeBodyHeight);
+        ctx.restore();
     };
 
-    var drawGiraffeBody = function(ctx,bodyLength,bodyHeight){
-
+    var drawGiraffeBody = function(ctx,bodyLength,bodyHeight) {
+ 
         ctx.save();
         ctx.beginPath();
         ctx.ellipse(0,0,bodyLength/2,bodyHeight/2,0,0,Math.PI * 2,false);
@@ -24,11 +29,12 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeTail = function(ctx,bodyLength,bodyHeight,tailTlit){
-
-    	ctx.save();
-    	var tailLength = bodyLength / 4;
-    	var tailWidth = tailLength / 5;
+    var drawGiraffeTail = function(ctx,bodyLength,bodyHeight,tailTlit) {
+        
+        var tailLength = bodyLength / 4;
+        var tailWidth = tailLength / 5;
+    	
+        ctx.save();
         ctx.translate(-4.5 * bodyLength/10,bodyHeight / 8);
     	ctx.rotate(tailTlit);
     	ctx.fillRect(0,0,tailLength,tailWidth);
@@ -47,10 +53,11 @@ $(function(){
     	ctx.restore();
     };
 
-    var drawGiraffeLeg = function(ctx,bodyLength,bodyHeight){
+    var drawGiraffeLeg = function(ctx,bodyLength,bodyHeight) {
 
         var legLength = bodyLength / 2;
         var legWidth = bodyHeight / 10;
+
         ctx.save();
         ctx.fillRect(0,0,legWidth,legLength);
         ctx.save();
@@ -61,7 +68,7 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeLegPair = function(ctx,bodyLength,bodyHeight){
+    var drawGiraffeLegPair = function(ctx,bodyLength,bodyHeight) {
 
         ctx.save();
         drawGiraffeLeg(ctx,bodyLength,bodyHeight);
@@ -70,22 +77,26 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeLegs = function(ctx,bodyLength,bodyHeight){
+    var drawGiraffeLegs = function(ctx,bodyLength,bodyHeight) {
+
+        var legGap = bodyLength / 5;
+        var legStart = bodyHeight / 4;
 
         ctx.save();
-        ctx.translate(-2 * bodyLength / 5,bodyHeight / 4);
+        ctx.translate(-2 * legGap,legStart);
         drawGiraffeLegPair(ctx,bodyLength,bodyHeight);
         ctx.restore();
         ctx.save();
-        ctx.translate(bodyLength / 5,bodyHeight / 4);
+        ctx.translate(legGap,legStart);
         drawGiraffeLegPair(ctx,bodyLength,bodyHeight);
         ctx.restore();
     };
 
-    var drawGiraffeNeck = function(ctx,bodyLength,bodyHeight,neckTilt){
+    var drawGiraffeNeck = function(ctx,bodyLength,bodyHeight,neckTilt) {
 
         var neckLength = bodyLength;
         var neckWidth = bodyHeight / 5;
+
         ctx.save();
         ctx.translate(2 * bodyLength / 5,0);
         ctx.rotate(neckTilt + Math.PI);
@@ -94,11 +105,12 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeHead = function(ctx,bodyLength,neckLength,neckWidth){
-
-        ctx.save();
+    var drawGiraffeHead = function(ctx,bodyLength,neckLength,neckWidth) {
+        
         var headLength = bodyLength/3;
         var headWidth = headLength/2.5;
+        
+        ctx.save();
         ctx.translate(0,neckLength);
         drawGiraffeHornPair(ctx,headWidth,neckWidth);
         ctx.translate(-headWidth/2,-headLength/4);
@@ -111,16 +123,15 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeHorn = function(ctx,headWidth,hornLength,hornWidth){
+    var drawGiraffeHorn = function(ctx,headWidth,hornLength,hornWidth) {
 
         ctx.save();
         ctx.fillRect(0,0,hornLength,hornWidth);
         ctx.save();
-        //ctx.rotate(3 * Math.PI / 4);
         drawGiraffeEar(ctx,headWidth);
         ctx.restore();
-        var hornRadius = hornWidth/4;
-        ctx.translate(hornWidth/8,hornWidth + hornRadius);
+        var hornRadius = hornWidth / 4;
+        ctx.translate(hornWidth / 8,hornWidth + hornRadius);
         ctx.beginPath();
         ctx.fillStyle = "rgb(61,53,12)";
         ctx.ellipse(0,0,hornRadius,hornRadius,0,0,Math.PI * 2,false);
@@ -128,23 +139,28 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeHornPair = function(ctx,headWidth,neckWidth){
+    var drawGiraffeHornPair = function(ctx,headWidth,neckWidth) {
+
+        var hornLength = headWidth / 8;
+        var hornWidth = headWidth / 2;
 
         ctx.save();
-        drawGiraffeHorn(ctx,headWidth,headWidth/8,headWidth/2);
-        ctx.translate(-neckWidth/2,-neckWidth/12);
-        drawGiraffeHorn(ctx,headWidth,headWidth/8,headWidth/2);
+        drawGiraffeHorn(ctx,headWidth,hornLength,hornWidth);
+        ctx.translate(-neckWidth / 2,-neckWidth / 12);
+        drawGiraffeHorn(ctx,headWidth,hornLength,hornWidth);
         ctx.restore();
     };
 
-    var drawGiraffeEar = function(ctx,headWidth){
+    var drawGiraffeEar = function(ctx,headWidth) {
+
+        var earLength = headWidth / 4;
 
         ctx.save();
         ctx.beginPath();
         ctx.fillStyle = "rgb(255,153,255";
         ctx.moveTo(0,0);
-        ctx.lineTo(headWidth / 4,headWidth / 6);
-        ctx.lineTo(headWidth / 4,0);
+        ctx.lineTo(earLength,headWidth / 6);
+        ctx.lineTo(earLength,0);
         ctx.fill();
         ctx.strokeStyle = "rgb(255,221,44)";
         ctx.lineWidth = headWidth / 32;
@@ -152,7 +168,7 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeEye = function(ctx,headWidth){
+    var drawGiraffeEye = function(ctx,headWidth) {
 
         ctx.save();
         ctx.beginPath();
@@ -163,7 +179,7 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeEyePair = function(ctx,headWidth){
+    var drawGiraffeEyePair = function(ctx,headWidth) {
 
         ctx.save();
         ctx.translate(0,headWidth / 8);
@@ -173,7 +189,7 @@ $(function(){
         ctx.restore();
     };
 
-    var drawGiraffeNose = function(ctx,headLength,headWidth){
+    var drawGiraffeNose = function(ctx,headLength,headWidth) {
 
         ctx.save();
         ctx.translate(-headLength / 2,-headWidth / 8);
