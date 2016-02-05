@@ -2,19 +2,23 @@ $(function(){
 
 	window.SpriteLibrary = window.SpriteLibrary || {};
 
-	SpriteLibrary.drawTree = function(treeInst){
+	SpriteLibrary.drawTree = function(treeInst) {
+
+		var ctx = treeInst.ctx || document.getElementById("canvas").getContext("2d");
+		var treeCurve = treeInst.treeCurve || 0;
 
 		var treeHeight = 100;
 		var treeWidth = treeHeight / 16;
-		treeInst.ctx.save();
-		treeInst.ctx.fillStyle = "rgb(255,255,130)";
-		drawTreeTrunk(treeInst.ctx,treeHeight,treeWidth,treeInst.treeCurve);
-		drawTreeBranches(treeInst.ctx,treeHeight,treeWidth,treeInst.treeCurve);
-		drawTreeLeaves(treeInst.ctx,treeHeight,treeInst.treeCurve);
-		treeInst.ctx.restore();
+
+		ctx.save();
+		ctx.fillStyle = "rgb(255,255,130)";
+		drawTreeTrunk(ctx,treeHeight,treeWidth,treeCurve);
+		drawTreeBranches(ctx,treeHeight,treeWidth,treeCurve);
+		drawTreeLeaves(ctx,treeHeight,treeCurve);
+		ctx.restore();
 	};
 
-	var drawTreeTrunk = function(ctx,treeHeight,treeWidth,treeCurve){
+	var drawTreeTrunk = function(ctx,treeHeight,treeWidth,treeCurve) {
 
 		ctx.save();
 		ctx.beginPath();
@@ -25,7 +29,7 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawTreeBranches = function(ctx,treeHeight,treeWidth,treeCurve){
+	var drawTreeBranches = function(ctx,treeHeight,treeWidth,treeCurve) {
 
 		ctx.save();
 		ctx.translate(0,-treeHeight);
@@ -45,11 +49,12 @@ $(function(){
 		ctx.restore();
 	};
 
-	var drawTreeLeaves = function(ctx,treeHeight,treeCurve){
+	var drawTreeLeaves = function(ctx,treeHeight,treeCurve) {
 
 		var leafRadius = treeHeight / 8;
+		
 		ctx.save();
-		ctx.translate(0,-treeHeight - 2 * leafRadius);
+		ctx.translate(0,-treeHeight - (2 * leafRadius));
 		rotateTreeTop(ctx,treeCurve);
 		ctx.beginPath();
 		ctx.fillStyle = "rgb(51,102,0)";
@@ -58,7 +63,7 @@ $(function(){
 		ctx.restore();
 	};
 
-	var rotateTreeTop = function(ctx,treeCurve){
+	var rotateTreeTop = function(ctx,treeCurve) {
 
 		ctx.rotate(-treeCurve / 2 * Math.PI / 180);
 	};
