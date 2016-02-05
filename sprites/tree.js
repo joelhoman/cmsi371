@@ -39,7 +39,7 @@ $(function(){
 		ctx.fillRect(0,0,treeWidth,treeHeight / 4);
 		ctx.restore();
 		ctx.save();
-		ctx.rotate(8 * Math.PI / 6);
+		ctx.rotate(4 * Math.PI / 3);
 		ctx.translate(0,-treeWidth);
 		ctx.fillRect(0,0,treeWidth,treeHeight / 6);
 		ctx.translate(0,treeHeight / 6);
