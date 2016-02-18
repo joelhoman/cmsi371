@@ -109,7 +109,7 @@
                         );
 
                         // Draw the sprite.
-                        sprites[i].draw(renderingContext);
+                        sprites[i].draw(createDrawParameters(renderingContext,ease,currentTweenFrame,startKeyframe,endKeyframe,duration));
 
                         // Clean up.
                         renderingContext.restore();
@@ -124,6 +124,25 @@
         };
 
         window.requestAnimationFrame(nextFrame);
+    };
+
+    var createDrawParameters = function (ctx,ease,currentTweenframe,startKeyframe,endKeyframe,duration) {
+        var drawValues = {};
+        //drawValues.ctx = ctx;
+        drawValues[ctx] = ctx;
+        for (var property in startKeyframe) {
+            //var parameterKey = startKeyframe[property].ke;
+            //console.log(property);
+            if ([startKeyframe.tx,startKeyframe.ty,startKeyframe.sx,startKeyframe.sy,startKeyframe.rotate,startKeyframe.ease,startKeyframe.frame].indexOf(property) == -1) {
+                var startValue = startKeyframe[property];
+                var distance = endKeyframe[property] - startValue;
+                var currentValue = ease(currentTweenframe,startValue,distance,duration);
+                //console.log("made it!");
+                drawValues[property] = currentValue;
+            }
+        }
+        console.log(drawValues);
+        return drawValues;
     };
 
     window.KeyframeTweener = {
