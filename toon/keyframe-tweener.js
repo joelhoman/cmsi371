@@ -165,6 +165,11 @@
                     (-distance / 2) * ((percentComplete - 1) * (percentComplete - 3) - 1) + start;
         },
 
+        rubberbandBoing: function (currentTime, start, distance, duration) {
+            var percentComplete = currentTime / duration;
+            return null
+        },
+
         initialize: initializeAnimation
     };
 }());
