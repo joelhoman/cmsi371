@@ -128,14 +128,18 @@
 
     var createDrawParameters = function (ctx,ease,currentTweenframe,startKeyframe,endKeyframe,duration) {
         var drawValues = {};
-        drawValues["ctx"] = ctx;
         for (var property in startKeyframe) {
             if (["tx","ty","sx","sy","ease","frame","rotate"].indexOf(property) == -1) {
-                var startValue = startKeyframe[property];
-                var endValue = endKeyframe[property] || startValue;
-                var distance = endValue - startValue;
-                var currentValue = ease(currentTweenframe,startValue,distance,duration);
-                drawValues[property] = currentValue;
+                if (property == "ctx"){
+                    drawValues[property] = startKeyframe[property] || endKeyframe[property];
+                }
+                else {
+                    var startValue = startKeyframe[property];
+                    var endValue = endKeyframe[property] || startValue;
+                    var distance = endValue - startValue;
+                    var currentValue = ease(currentTweenframe,startValue,distance,duration);
+                    drawValues[property] = currentValue;
+                }
             }
         }
         return drawValues;
