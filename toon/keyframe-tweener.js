@@ -167,7 +167,7 @@
 
         rubberbandBoing: function (currentTime, start, distance, duration) {
             var percentComplete = currentTime / duration;
-            return null
+            return null;
         },
 
         initialize: initializeAnimation
