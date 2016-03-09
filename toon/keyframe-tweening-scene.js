@@ -50,21 +50,22 @@
             ]
         },
         {
-            draw: SpriteLibrary.drawPoop,
+            draw: SpriteLibrary.drawTree,
             keyframes: [
                 {
                     ctx: renderingContext,
                     frame: 0,
-                    tx: 0,
-                    ty: 0,
+                    tx: 400,
+                    ty: 290,
                 },
 
                 {
                     ctx: renderingContext,
                     frame: 720,
-                    tx: 0,
-                    ty: 0,
+                    tx: 400,
+                    ty: 290,
                 }
+
             ]
         },
         {
@@ -73,29 +74,21 @@
                 {
                     ctx: renderingContext,
                     frame: 0,
-                    tx: 20,
-                    ty: 20,
-                    neckTilt: 0,
-                    tailTilt: Math.PI / 4,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 3 * Math.PI / 4,
                 },
 
                 {
                     ctx: renderingContext,
-                    frame: 30,
-                    tx: 100,
-                    ty: 50,
-                    tailTilt: Math.PI / 2,
+                    frame: 720,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 3 * Math.PI / 4,
                     ease: KeyframeTweener.quadEaseInOut
                 },
-
-                // The last keyframe does not need an easing function.
-                {
-                    ctx: renderingContext,
-                    frame: 80,
-                    tx: 80,
-                    ty: 500,
-                    tailTilt: Math.PI // Keyframe.rotate uses degrees.
-                }
             ]
         },
         {
@@ -104,48 +97,40 @@
                 {
                     ctx: renderingContext,
                     frame: 0,
-                    tx: 20,
-                    ty: 20,
-                    neckTilt: 0,
-                    tailTilt: Math.PI / 4,
-                },
-
-                {
-                    ctx: renderingContext,
-                    frame: 30,
                     tx: 100,
-                    ty: 50,
-                    tailTilt: Math.PI / 2,
-                    ease: KeyframeTweener.quadEaseInOut
-                },
-
-                // The last keyframe does not need an easing function.
-                {
-                    ctx: renderingContext,
-                    frame: 80,
-                    tx: 80,
-                    ty: 500,
-                    tailTilt: Math.PI // Keyframe.rotate uses degrees.
-                }
-            ]
-        },
-        {
-            draw: SpriteLibrary.drawTree,
-            keyframes: [
-                {
-                    ctx: renderingContext,
-                    frame: 0,
-                    tx: 400,
-                    ty: 300,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6
                 },
 
                 {
                     ctx: renderingContext,
                     frame: 720,
-                    tx: 400,
-                    ty: 300,
+                    tx: 100,
+                    ty: 250,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6,
+                    ease: KeyframeTweener.quadEaseInOut
                 }
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawPoop,
+            keyframes: [
+                /*{
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 0,
+                    ty: 0,
+                },
 
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 0,
+                    ty: 0,
+                }*/
             ]
         }
     ];
