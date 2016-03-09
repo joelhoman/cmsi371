@@ -61,7 +61,7 @@
                     tx: 400,
                     ty: 290,
                     treeCurve: -40,
-                    ease: KeyframeTweener.linear
+                    ease: KeyframeTweener.elastic
                 },
                 {
                     ctx: renderingContext,
@@ -89,7 +89,7 @@
                     frame: 0,
                     tx: 250,
                     ty: 225,
-                    neckTilt: -Math.PI,
+                    neckTilt: Math.PI / 16,
                     tailTilt: 3 * Math.PI / 4,
                 },
                 {
@@ -97,7 +97,7 @@
                     frame: 48,
                     tx: 250,
                     ty: 225,
-                    neckTilt: -Math.PI,
+                    neckTilt: Math.PI / 16,
                     tailTilt: 3 * Math.PI / 4,
                 },
                 {

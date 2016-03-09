@@ -173,6 +173,12 @@
             return -distance / 2 * (Math.cos(Math.PI * currentTime / duration) - 1) + start;
         },
 
+        elastic: function(currentTime, start, distance, duration) {
+            var percentComplete = (currentTime /= duration) * currentTime;
+            var frame = percentComplete * currentTime;
+            return start + distance *(56 * frame * percentComplete + -175 * percentComplete * percentComplete + 200 * frame + -100 * percentComplete + 20 * currentTime);
+        },
+
         initialize: initializeAnimation
     };
 }());
