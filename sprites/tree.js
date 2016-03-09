@@ -5,7 +5,7 @@ $(function(){
 	SpriteLibrary.drawTree = function(treeInst) {
 
 		var ctx = treeInst.ctx || document.getElementById("canvas").getContext("2d");
-		var treeCurve = treeInst.treeCurve || 0;
+		var treeCurve = treeInst.treeCurve || 1;
 
 		var treeHeight = 100;
 		var treeWidth = treeHeight / 16;

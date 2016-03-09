@@ -170,8 +170,26 @@
         },
 
         rubberbandBoing: function (currentTime, start, distance, duration) {
-            var percentComplete = currentTime / duration;
-            return null;
+            var s = 1.70158;
+            var p = 0;
+            var a = distance;
+            if (currentTime == 0) {
+                return start;
+            }
+            if ((currentTime /= duration) == 1) {
+                return start + distance;
+            }
+            if (!p) {
+                p = duration * 0.3;
+            }
+            if (a < Math.abs(distance)) { 
+                a = distance;
+                var s = p / 4;
+            } else {
+                 var s = p / (2 * Math.PI) * Math.asin (distance / a);
+            }
+            return a * Math.pow(2,-10 * currentTime) * Math.sin((currentTime * duration - s) * (2 * Math.PI) / p) + distance + start;
+
         },
 
         initialize: initializeAnimation

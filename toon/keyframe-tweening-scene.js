@@ -58,7 +58,30 @@
                     tx: 400,
                     ty: 290,
                 },
-
+                {
+                    ctx: renderingContext,
+                    frame: 48,
+                    tx: 400,
+                    ty: 290,
+                    treeCurve: 1,
+                    ease: KeyframeTweener.linear
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 75,
+                    tx: 400,
+                    ty: 290,
+                    treeCurve: -100,
+                    ease: KeyframeTweener.rubberbandBoing
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 100,
+                    tx: 400,
+                    ty: 290,
+                    treeCurve: 1,
+                    ease: KeyframeTweener.rubberbandBoing
+                },
                 {
                     ctx: renderingContext,
                     frame: 720,
@@ -79,7 +102,30 @@
                     neckTilt: Math.PI / 8,
                     tailTilt: 3 * Math.PI / 4,
                 },
-
+                {
+                    ctx: renderingContext,
+                    frame: 48,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 3 * Math.PI / 4,
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 75,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 4,
+                    tailTilt: 3 * Math.PI / 4,
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 100,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 3 * Math.PI / 4,
+                },
                 {
                     ctx: renderingContext,
                     frame: 720,
