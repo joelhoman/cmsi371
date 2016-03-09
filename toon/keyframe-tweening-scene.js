@@ -18,17 +18,6 @@
     // Now, to actually define the animated sprites.  Each sprite
     // has a drawing function and an array of keyframes.
 
-    /*var sunrise = new Image();
-    sunrise.src = 'sunrise.jpg'; 
-    renderingContext.save();
-    renderingContext.translate(canvas.width,canvas.height);
-    sunrise.onload = function(){
-        var pattern = renderingContext.createPattern(this, "repeat");
-        renderingContext.fillStyle = pattern;
-        renderingContext.fill();
-    };
-    renderingContext.restore();*/
-
     renderingContext.scale(2,2);
     var sprites = [
         {
@@ -71,8 +60,8 @@
                     frame: 75,
                     tx: 400,
                     ty: 290,
-                    treeCurve: -100,
-                    ease: KeyframeTweener.rubberbandBoing
+                    treeCurve: -40,
+                    ease: KeyframeTweener.linear
                 },
                 {
                     ctx: renderingContext,
@@ -80,13 +69,14 @@
                     tx: 400,
                     ty: 290,
                     treeCurve: 1,
-                    ease: KeyframeTweener.rubberbandBoing
+                    ease: KeyframeTweener.linear
                 },
                 {
                     ctx: renderingContext,
                     frame: 720,
                     tx: 400,
                     ty: 290,
+                    treeCurve: 1
                 }
 
             ]
@@ -99,7 +89,7 @@
                     frame: 0,
                     tx: 250,
                     ty: 225,
-                    neckTilt: Math.PI / 8,
+                    neckTilt: -Math.PI,
                     tailTilt: 3 * Math.PI / 4,
                 },
                 {
@@ -107,7 +97,7 @@
                     frame: 48,
                     tx: 250,
                     ty: 225,
-                    neckTilt: Math.PI / 8,
+                    neckTilt: -Math.PI,
                     tailTilt: 3 * Math.PI / 4,
                 },
                 {
