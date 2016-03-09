@@ -17,11 +17,61 @@
 
     // Now, to actually define the animated sprites.  Each sprite
     // has a drawing function and an array of keyframes.
+
+    /*var sunrise = new Image();
+    sunrise.src = 'sunrise.jpg'; 
+    renderingContext.save();
+    renderingContext.translate(canvas.width,canvas.height);
+    sunrise.onload = function(){
+        var pattern = renderingContext.createPattern(this, "repeat");
+        renderingContext.fillStyle = pattern;
+        renderingContext.fill();
+    };
+    renderingContext.restore();*/
+
+    renderingContext.scale(2,2);
     var sprites = [
         {
-            draw: window.SpriteLibrary.drawGiraffe,
+            draw: SpriteLibrary.drawSunrise,
             keyframes: [
                 {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 0,
+                    ty: 0,
+                },
+
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 0,
+                    ty: 0,
+                }
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawPoop,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 0,
+                    ty: 0,
+                },
+
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 0,
+                    ty: 0,
+                }
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawGiraffe,
+            keyframes: [
+                {
+                    ctx: renderingContext,
                     frame: 0,
                     tx: 20,
                     ty: 20,
@@ -30,6 +80,7 @@
                 },
 
                 {
+                    ctx: renderingContext,
                     frame: 30,
                     tx: 100,
                     ty: 50,
@@ -39,11 +90,62 @@
 
                 // The last keyframe does not need an easing function.
                 {
+                    ctx: renderingContext,
                     frame: 80,
                     tx: 80,
                     ty: 500,
                     tailTilt: Math.PI // Keyframe.rotate uses degrees.
                 }
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawLion,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 20,
+                    ty: 20,
+                    neckTilt: 0,
+                    tailTilt: Math.PI / 4,
+                },
+
+                {
+                    ctx: renderingContext,
+                    frame: 30,
+                    tx: 100,
+                    ty: 50,
+                    tailTilt: Math.PI / 2,
+                    ease: KeyframeTweener.quadEaseInOut
+                },
+
+                // The last keyframe does not need an easing function.
+                {
+                    ctx: renderingContext,
+                    frame: 80,
+                    tx: 80,
+                    ty: 500,
+                    tailTilt: Math.PI // Keyframe.rotate uses degrees.
+                }
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 400,
+                    ty: 300,
+                },
+
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 400,
+                    ty: 300,
+                }
+
             ]
         }
     ];
