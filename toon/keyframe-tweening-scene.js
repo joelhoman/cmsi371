@@ -44,28 +44,173 @@
                 {
                     ctx: renderingContext,
                     frame: 0,
-                    tx: 400,
-                    ty: 290,
+                    tx: 300,
+                    ty: 265,
+                    sx: 0.3,
+                    sy: 0.3,
+                    treeCurve: 1
                 },
                 {
                     ctx: renderingContext,
-                    frame: 48,
+                    frame: 720,
+                    tx: 300,
+                    ty: 265,
+                    sx: 0.3,
+                    sy: 0.3,
+                    treeCurve: 1
+                }
+
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 127,
+                    ty: 269,
+                    sx: 0.37,
+                    sy: 0.37,
+                    treeCurve: 1
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 127,
+                    ty: 269,
+                    sx: 0.37,
+                    sy: 0.37,
+                    treeCurve: 1
+                }
+
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 182,
+                    ty: 281,
+                    sx: 0.39,
+                    sy: 0.39,
+                    treeCurve: 1
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 182,
+                    ty: 281,
+                    sx: 0.39,
+                    sy: 0.39,
+                    treeCurve: 1
+                }
+
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 365,
+                    ty: 271,
+                    sx: 0.33,
+                    sy: 0.33,
+                    treeCurve: 1
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 365,
+                    ty: 271,
+                    sx: 0.33,
+                    sy: 0.33,
+                    treeCurve: 1
+                }
+
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 50,
+                    ty: 265,
+                    sx: 0.3,
+                    sy: 0.3,
+                    treeCurve: 1
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 50,
+                    ty: 265,
+                    sx: 0.3,
+                    sy: 0.3,
+                    treeCurve: 1
+                }
+
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 415,
+                    ty: 275,
+                    sx: 0.35,
+                    sy: 0.35,
+                    treeCurve: 1
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 720,
+                    tx: 415,
+                    ty: 275,
+                    sx: 0.35,
+                    sy: 0.35,
+                    treeCurve: 1
+                }
+
+            ]
+        },
+        {
+            draw: SpriteLibrary.drawTree,
+            keyframes: [
+                {
+                    ctx: renderingContext,
+                    frame: 0,
+                    tx: 400,
+                    ty: 290,
+                    treeCurve: 1
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 195,
                     tx: 400,
                     ty: 290,
                     treeCurve: 1,
-                    ease: KeyframeTweener.linear
+                    ease: KeyframeTweener.quadEaseInOut
                 },
                 {
                     ctx: renderingContext,
-                    frame: 75,
+                    frame: 220,
                     tx: 400,
                     ty: 290,
-                    treeCurve: -40,
+                    treeCurve: -30,
                     ease: KeyframeTweener.elastic
                 },
                 {
                     ctx: renderingContext,
-                    frame: 100,
+                    frame: 245,
                     tx: 400,
                     ty: 290,
                     treeCurve: 1,
@@ -94,23 +239,25 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 48,
+                    frame: 168,
                     tx: 250,
                     ty: 225,
                     neckTilt: Math.PI / 16,
                     tailTilt: 3 * Math.PI / 4,
+                    ease: KeyframeTweener.quadEaseInOut
                 },
                 {
                     ctx: renderingContext,
-                    frame: 75,
+                    frame: 195,
                     tx: 250,
                     ty: 225,
                     neckTilt: Math.PI / 4,
                     tailTilt: 3 * Math.PI / 4,
+                    ease: KeyframeTweener.quadEaseInOut
                 },
                 {
                     ctx: renderingContext,
-                    frame: 100,
+                    frame: 220,
                     tx: 250,
                     ty: 225,
                     neckTilt: Math.PI / 8,
@@ -123,7 +270,6 @@
                     ty: 225,
                     neckTilt: Math.PI / 8,
                     tailTilt: 3 * Math.PI / 4,
-                    ease: KeyframeTweener.quadEaseInOut
                 },
             ]
         },
@@ -139,7 +285,83 @@
                     tailTilt: -3 * Math.PI / 4,
                     jawLength: 6
                 },
-
+                {
+                    ctx: renderingContext,
+                    frame: 48,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 75,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -2 * Math.PI / 3,
+                    jawLength: 6,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 96,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 125,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -2 * Math.PI / 3,
+                    jawLength: 6,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 144,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 248,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 269,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 10,
+                    ease: KeyframeTweener.quadEaseInOut
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 317,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6
+                },
                 {
                     ctx: renderingContext,
                     frame: 720,
