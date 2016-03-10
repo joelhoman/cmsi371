@@ -7,7 +7,7 @@ var Nanoshop = {
      * A basic "darkener."
      */
     darkener: function (x, y, r, g, b, a) {
-        return [ r / 2, g / 2, b / 2, a ];
+        return [ r, g / 2, b / 2, a * .9 ];
     },
 
     /*
