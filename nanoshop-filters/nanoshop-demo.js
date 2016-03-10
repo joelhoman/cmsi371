@@ -6,7 +6,7 @@
     var canvas = $("#picture")[0];
     var renderingContext = canvas.getContext("2d");
 
-   window.SpriteLibrary = window.SpriteLibrary || {};
+    window.SpriteLibrary = window.SpriteLibrary || {};
 
     renderingContext.save();
     renderingContext.translate(300,300);
@@ -20,7 +20,7 @@
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                Nanoshop.darkener
+                Nanoshop.grayScale
             ),
             0, 0
         );

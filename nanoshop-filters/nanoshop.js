@@ -7,7 +7,16 @@ var Nanoshop = {
      * A basic "darkener."
      */
     darkener: function (x, y, r, g, b, a) {
-        return [ r, g / 2, b / 2, a * .9 ];
+        return [ r / 2, g / 2, b / 2, a ];
+    },
+
+    colorSwapper: function (x, y, r, g, b, a) {
+        return [ b, g, r, a];
+    },
+
+    grayScale: function (x, y, r, g, b, a) {
+        var average = (r + g + b) / 3;
+        return [ average, average, average, a];
     },
 
     /*
