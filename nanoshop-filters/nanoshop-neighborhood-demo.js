@@ -54,6 +54,7 @@
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
                 Nanoshop.randomColorSwapper
+                //Nanoshop.grayScale
             ),
             0, 0
         );

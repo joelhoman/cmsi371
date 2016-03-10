@@ -42,7 +42,6 @@ var NanoshopNeighborhood = {
         var g = rgbaNeighborhood[random].g;
         var b = rgbaNeighborhood[random].b;
         var a = rgbaNeighborhood[random].a;
-        //console.log(random);
         return [ r, g, b, a ];
     },
 

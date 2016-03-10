@@ -12,14 +12,14 @@ var Nanoshop = {
 
     randomColorSwapper: function (x, y, r, g, b, a) {
         var random = Math.random(0,1);
-        if (random >= 0.7){
+        if (random >= 0.2){
             return [ b, g, r, a];
         } else {
             return [ g, b, r, a ];
         }
     },
 
-    averager: function (x, y, r, g, b, a) {
+    grayScale: function (x, y, r, g, b, a) {
         var average = (r + g + b) / 3;
         return [ average, average, average, a];
     },
