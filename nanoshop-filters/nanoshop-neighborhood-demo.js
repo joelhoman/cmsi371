@@ -9,6 +9,12 @@
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     renderingContext.save();
+    renderingContext.save();
+    renderingContext.fillStyle = "rgb(17,150,239)";
+    renderingContext.fillRect(0,0,canvas.width, 2 * canvas.height / 3);
+    renderingContext.fillStyle = "rgb(58,249,58)";
+    renderingContext.fillRect(0,2 * canvas.height / 3,canvas.width,canvas.height / 3);
+    renderingContext.restore();
     renderingContext.translate(200,400);
     renderingContext.scale(3.5,3.5);
     SpriteLibrary.drawLion(
@@ -21,6 +27,11 @@
         ctx: renderingContext,
         tailTilt: 3 * Math.PI / 4,
         neckTilt: Math.PI / 16
+    });
+    renderingContext.translate(130,75);
+    SpriteLibrary.drawTree(
+    {
+        ctx: renderingContext
     });
     renderingContext.restore();
 
