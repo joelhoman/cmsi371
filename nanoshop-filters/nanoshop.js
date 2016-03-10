@@ -13,10 +13,8 @@ var Nanoshop = {
     randomColorSwapper: function (x, y, r, g, b, a) {
         var random = Math.random(0,1);
         if (random >= 0.7){
-            //console.log(random);
             return [ b, g, r, a];
         } else {
-            //console.log(random);
             return [ g, b, r, a ];
         }
     },

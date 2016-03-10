@@ -36,6 +36,26 @@ var NanoshopNeighborhood = {
         return [ rTotal / 9, gTotal / 9, bTotal / 9, aTotal / 9 ];
     },
 
+    rain: function (x, y, rgbaNeighborhood) {
+        var random = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
+        var r = rgbaNeighborhood[random].r;
+        var g = rgbaNeighborhood[random].g;
+        var b = rgbaNeighborhood[random].b;
+        var a = rgbaNeighborhood[random].a;
+        //console.log(random);
+        return [ r, g, b, a ];
+    },
+
+    distortionBlur: function (x, y, rgbaNeighborhood) {
+        var first = 0;
+        var second = 8;
+        var r = (rgbaNeighborhood[first].r + rgbaNeighborhood[second].r) / 2;
+        var g = (rgbaNeighborhood[first].g + rgbaNeighborhood[second].g) / 2;
+        var b = (rgbaNeighborhood[first].b + rgbaNeighborhood[second].b) / 2;
+        var a = (rgbaNeighborhood[first].a + rgbaNeighborhood[second].a) / 2;
+        return [ r, g, b, a ];
+    },
+
     /*
      * This is a rudimentary edge dector---another filter that would not be possible
      * without knowing about the other pixels in our neighborhood.
