@@ -20,7 +20,7 @@
         renderingContext.putImageData(
             Nanoshop.applyFilter(
                 renderingContext.getImageData(0, 0, canvas.width, canvas.height),
-                Nanoshop.grayScale
+                Nanoshop.randomColorSwapper
             ),
             0, 0
         );

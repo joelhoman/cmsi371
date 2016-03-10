@@ -10,11 +10,18 @@ var Nanoshop = {
         return [ r / 2, g / 2, b / 2, a ];
     },
 
-    colorSwapper: function (x, y, r, g, b, a) {
-        return [ b, g, r, a];
+    randomColorSwapper: function (x, y, r, g, b, a) {
+        var random = Math.random(0,1);
+        if (random >= 0.7){
+            //console.log(random);
+            return [ b, g, r, a];
+        } else {
+            //console.log(random);
+            return [ g, b, r, a ];
+        }
     },
 
-    grayScale: function (x, y, r, g, b, a) {
+    averager: function (x, y, r, g, b, a) {
         var average = (r + g + b) / 3;
         return [ average, average, average, a];
     },
