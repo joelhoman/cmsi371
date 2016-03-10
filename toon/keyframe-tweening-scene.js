@@ -32,7 +32,7 @@
 
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 0,
                     ty: 0,
                 }
@@ -52,7 +52,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 300,
                     ty: 265,
                     sx: 0.3,
@@ -76,7 +76,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 127,
                     ty: 269,
                     sx: 0.37,
@@ -100,7 +100,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 182,
                     ty: 281,
                     sx: 0.39,
@@ -124,7 +124,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 365,
                     ty: 271,
                     sx: 0.33,
@@ -148,7 +148,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 50,
                     ty: 265,
                     sx: 0.3,
@@ -172,7 +172,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 415,
                     ty: 275,
                     sx: 0.35,
@@ -218,7 +218,7 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 400,
                     ty: 290,
                     treeCurve: 1
@@ -265,12 +265,46 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 300,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 3 * Math.PI / 4,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 348,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 7 * Math.PI / 8,
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 360,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 7 * Math.PI / 8,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 372,
                     tx: 250,
                     ty: 225,
                     neckTilt: Math.PI / 8,
                     tailTilt: 3 * Math.PI / 4,
                 },
+                {
+                    ctx: renderingContext,
+                    frame: 380,
+                    tx: 250,
+                    ty: 225,
+                    neckTilt: Math.PI / 8,
+                    tailTilt: 3 * Math.PI / 4,
+                }
             ]
         },
         {
@@ -335,6 +369,44 @@
                 },
                 {
                     ctx: renderingContext,
+                    frame: 180,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -2 * Math.PI / 3,
+                    jawLength: 6,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 192,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 225,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -2 * Math.PI / 3,
+                    jawLength: 6,
+                    ease: KeyframeTweener.easeInOutSin
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 240,
+                    tx: 100,
+                    ty: 250,
+                    neckTilt: 0,
+                    tailTilt: -3 * Math.PI / 4,
+                    jawLength: 6
+                },
+                {
+                    ctx: renderingContext,
                     frame: 248,
                     tx: 100,
                     ty: 250,
@@ -364,31 +436,36 @@
                 },
                 {
                     ctx: renderingContext,
-                    frame: 720,
+                    frame: 380,
                     tx: 100,
                     ty: 250,
                     tailTilt: -3 * Math.PI / 4,
                     jawLength: 6,
-                    ease: KeyframeTweener.quadEaseInOut
                 }
             ]
         },
         {
             draw: SpriteLibrary.drawPoop,
             keyframes: [
-                /*{
-                    ctx: renderingContext,
-                    frame: 0,
-                    tx: 0,
-                    ty: 0,
-                },
-
                 {
                     ctx: renderingContext,
-                    frame: 720,
-                    tx: 0,
-                    ty: 0,
-                }*/
+                    frame: 348,
+                    tx: 190,
+                    ty: 245,
+                    ease: KeyframeTweener.quadEaseOut
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 358,
+                    tx: 190,
+                    ty: 275,
+                },
+                {
+                    ctx: renderingContext,
+                    frame: 380,
+                    tx: 190,
+                    ty: 275,
+                }
             ]
         }
     ];

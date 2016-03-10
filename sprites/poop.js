@@ -14,7 +14,7 @@ $(function(){
 		var ctx = poopInst.ctx || document.getElementById("canvas").getContext("2d");
 
 		if(poop.loaded){
-	    	ctx.drawImage(poop,0,0,poop.width / 6,poop.height / 6);
+	    	ctx.drawImage(poop,0,0,poop.width / 8,poop.height / 8);
 	    }
 	}
 }());
