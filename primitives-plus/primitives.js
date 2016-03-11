@@ -2,6 +2,28 @@
  * A module demonstrating assorted algorithms for selected 2D graphics
  * operations.
  */
+
+var TweenColor = function(colors, x, y, radius){
+    var xDelta = x / (radius);
+    var yDelta = y / (radius);
+    var xColor1 = [
+        (colors[0][0] - colors[1][0]) * xDelta,
+        (colors[0][1] - colors[1][1]) * xDelta,
+        (colors[0][2] - colors[1][2]) * xDelta
+    ];
+    var yColor1 = [
+        (colors[2][0] - colors[3][0]) * yDelta,
+        (colors[2][1] - colors[3][1]) * yDelta,
+        (colors[2][2] - colors[3][2]) * yDelta
+    ];
+    var tweenedColor = [
+        colors[0][0] - xColor1[0],
+        colors[0][1] - xColor1[1],
+        colors[0][2] - xColor1[2]
+    ];
+    return tweenedColor;
+}
+
 var Primitives = {
     /*
      * This is the cornerstone: we promise not to use any other graphics
@@ -272,7 +294,7 @@ var Primitives = {
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    plotCirclePoints: function (context, xc, yc, x, y, color) {
+    /*plotCirclePoints: function (context, xc, yc, x, y, color) {
         color = color || [0, 0, 0];
         this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
         this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
@@ -282,6 +304,33 @@ var Primitives = {
         this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
         this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
         this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
+    },*/
+
+    plotCirclePoints: function (context, xc, yc, x, y, colors) {
+
+        var radius = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+
+        colors = colors || [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ];
+        for (var i = 0; i <= x; i++){
+            var newColor = TweenColor(colors, i, y, radius);
+            this.setPixel(context, xc + i, yc + y, newColor[0], newColor[1], newColor[2]);
+            this.setPixel(context, xc + i, yc - y, newColor[0], newColor[1], newColor[2]);
+        }
+        for (var i = 0; i <= x; i++){
+            var newColor = TweenColor(colors, -i, y, radius);
+            this.setPixel(context, xc - i, yc + y, newColor[0], newColor[1], newColor[2]);
+            this.setPixel(context, xc - i, yc - y, newColor[0], newColor[1], newColor[2]);
+        }
+        for (var i = 0; i <= y; i++){
+            var newColor = TweenColor(colors, i, x, radius);
+            this.setPixel(context, xc + i, yc + x, newColor[0], newColor[1], newColor[2]);
+            this.setPixel(context, xc + i, yc - x, newColor[0], newColor[1], newColor[2]);
+        }
+        for (var i = 0; i <= y; i++){
+            var newColor = TweenColor(colors, -i, x, radius);
+            this.setPixel(context, xc - i, yc + x, newColor[0], newColor[1], newColor[2]);
+            this.setPixel(context, xc - i, yc - x, newColor[0], newColor[1], newColor[2]);
+        }
     },
 
     // First, the most naive possible implementation: circle by trigonometry.
