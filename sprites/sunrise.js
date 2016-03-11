@@ -12,9 +12,9 @@ $(function(){
 	SpriteLibrary.drawSunrise = function (sunriseInst) {
 
 		var ctx = sunriseInst.ctx || document.getElementById("canvas").getContext("2d");
-
+		
 		if(sunrise.loaded) {
 			ctx.drawImage(sunrise,0,0,sunrise.width / 6,sunrise.height / 6);
-		} 
+		}
 	}
 }());

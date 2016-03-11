@@ -37,7 +37,7 @@ var NanoshopNeighborhood = {
     },
 
     rain: function (x, y, rgbaNeighborhood) {
-        var random = Math.floor(Math.random() * (8 - 0 + 1)) + 0;
+        var random = Math.floor(Math.random() * (9));
         var r = rgbaNeighborhood[random].r;
         var g = rgbaNeighborhood[random].g;
         var b = rgbaNeighborhood[random].b;
