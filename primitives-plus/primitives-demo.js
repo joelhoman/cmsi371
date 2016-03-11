@@ -24,7 +24,7 @@
     Primitives.lineBresenham(renderingContext, 825, 210, 1024, 110);
 
     // A few circles.
-    var colors = [ [255,0,0], [255,255,0], [0,255,0], [0,0,255] ];
+    var colors = [ [255, 0, 0], [255, 255, 0], [0, 200, 0], [0, 0, 100] ];
     Primitives.circleTrig(renderingContext, 105, 315, 100, colors);
     Primitives.circleDDA(renderingContext, 310, 315, 100, colors);
     Primitives.circleBres1(renderingContext, 515, 315, 100, colors);

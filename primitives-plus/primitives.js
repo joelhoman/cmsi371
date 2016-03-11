@@ -3,24 +3,24 @@
  * operations.
  */
 
-var TweenColor = function (colors, x, y, radius) {
+var tweenColor = function (colors, x, y, radius) {
     var xNeg = false;
     var yNeg = false;
     if (x < 0 ) {
         x = -x;
         xNeg = true;
     }
-    /*if ( y < 0) {
-        //y = -y;
+    if ( y < 0) {
+        y = -y;
         yNeg = true;
-    }*/
+    }
     var xDelta = x / radius;
     var yDelta = y / radius;
-    if (!xNeg){
+    /*if (!xNeg){
         var topColor = [
-        colors[0][0] + (colors[1][0] - colors[0][0] * xDelta),
-        colors[0][1] + (colors[1][1] - colors[0][1] * xDelta),
-        colors[0][2] + (colors[1][2] - colors[0][2] * xDelta)
+            colors[0][0] + (colors[1][0] - colors[0][0] * xDelta),
+            colors[0][1] + (colors[1][1] - colors[0][1] * xDelta),
+            colors[0][2] + (colors[1][2] - colors[0][2] * xDelta)
         ];
         var bottomColor = [
             colors[2][0] + (colors[3][0] - colors[2][0] * xDelta),
@@ -29,9 +29,9 @@ var TweenColor = function (colors, x, y, radius) {
         ];
     } else {
         var topColor = [
-        colors[1][0] + (colors[0][0] - colors[1][0] * xDelta),
-        colors[1][1] + (colors[0][1] - colors[1][1] * xDelta),
-        colors[1][2] + (colors[0][2] - colors[1][2] * xDelta)
+            colors[1][0] + (colors[0][0] - colors[1][0] * xDelta),
+            colors[1][1] + (colors[0][1] - colors[1][1] * xDelta),
+            colors[1][2] + (colors[0][2] - colors[1][2] * xDelta)
         ];
         var bottomColor = [
             colors[3][0] + (colors[2][0] - colors[3][0] * xDelta),
@@ -40,20 +40,90 @@ var TweenColor = function (colors, x, y, radius) {
         ];
     }
     if (!yNeg){
-        var tweenedColor = [
+        var leftColor = [
+            colors[0][0] + (colors[2][0] - colors[0][0] * yDelta),
+            colors[0][1] + (colors[2][1] - colors[0][1] * yDelta),
+            colors[0][2] + (colors[2][2] - colors[0][2] * yDelta)
+        ];
+        var rightColor = [
+            colors[1][0] + (colors[3][0] - colors[1][0] * yDelta),
+            colors[1][1] + (colors[3][1] - colors[1][1] * yDelta),
+            colors[1][2] + (colors[3][2] - colors[1][2] * yDelta)
+        ];
+    } else {
+        var leftColor = [
+            colors[2][0] + (colors[0][0] - colors[2][0] * yDelta),
+            colors[2][1] + (colors[0][1] - colors[2][1] * yDelta),
+            colors[2][2] + (colors[0][2] - colors[2][2] * yDelta)
+        ];
+        var rightColor = [
+            colors[3][0] + (colors[1][0] - colors[3][0] * yDelta),
+            colors[3][1] + (colors[1][1] - colors[3][1] * yDelta),
+            colors[3][2] + (colors[1][2] - colors[3][2] * yDelta)
+        ];
+    }
+    if (!xNeg && !yNeg) {
+        var finalColor = [
+        rightColor[0] + (topColor[0]) - rightColor[0],
+        rightColor[1] + (topColor[1]) - rightColor[1],
+        rightColor[2] + (topColor[2]) - rightColor[2]
+        ];
+    } else if (!xNeg && yNeg) {
+        var finalColor = [
+        rightColor[0] + (bottomColor[0]) - rightColor[0],
+        rightColor[1] + (bottomColor[1]) - rightColor[1],
+        rightColor[2] + (bottomColor[2]) - rightColor[2]
+        ];
+    } else if (xNeg && !yNeg) {
+        var finalColor =[
+        leftColor[0] + (topColor[0]) - leftColor[0],
+        leftColor[1] + (topColor[1]) - leftColor[1],
+        leftColor[2] + (topColor[2]) - leftColor[2]
+        ];
+    } else {
+        var finalColor =[
+        leftColor[0] + (bottomColor[0]) - leftColor[0] * xDelta * yDelta,
+        leftColor[1] + (bottomColor[1]) - leftColor[1] * xDelta * yDelta,
+        leftColor[2] + (bottomColor[2]) - leftColor[2] * xDelta * yDelta
+        ];
+    }*/
+    if (!xNeg){
+        var topColor = [
+            colors[0][0] + (colors[1][0] - colors[0][0] * xDelta),
+            colors[0][1] + (colors[1][1] - colors[0][1] * xDelta),
+            colors[0][2] + (colors[1][2] - colors[0][2] * xDelta)
+        ];
+        var bottomColor = [
+            colors[2][0] + (colors[3][0] - colors[2][0] * xDelta),
+            colors[2][1] + (colors[3][1] - colors[2][1] * xDelta),
+            colors[2][2] + (colors[3][2] - colors[2][2] * xDelta)
+        ];
+    } else {
+        var topColor = [
+            colors[1][0] + (colors[0][0] - colors[1][0] * xDelta),
+            colors[1][1] + (colors[0][1] - colors[1][1] * xDelta),
+            colors[1][2] + (colors[0][2] - colors[1][2] * xDelta)
+        ];
+        var bottomColor = [
+            colors[3][0] + (colors[2][0] - colors[3][0] * xDelta),
+            colors[3][1] + (colors[2][1] - colors[3][1] * xDelta),
+            colors[3][2] + (colors[2][2] - colors[3][2] * xDelta)
+        ];
+    }
+    if (!yNeg) {
+        var finalColor = [
         topColor[0] + (bottomColor[0] - topColor[0] * yDelta),
         topColor[1] + (bottomColor[1] - topColor[1] * yDelta),
         topColor[2] + (bottomColor[2] - topColor[2] * yDelta)
         ];
     } else {
-        var tweenedColor = [
+        var finalColor = [
         bottomColor[0] + (topColor[0] - bottomColor[0] * yDelta),
         bottomColor[1] + (topColor[1] - bottomColor[1] * yDelta),
         bottomColor[2] + (topColor[2] - bottomColor[2] * yDelta)
         ];
     }
-    
-    return topColor;
+    return finalColor;
 }
 
 var Primitives = {
@@ -344,23 +414,27 @@ var Primitives = {
 
         colors = colors || [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ];
         for (var i = 0; i <= x; i++){
-            var newColor = TweenColor(colors, i, y, radius);
+            var newColor = tweenColor(colors, i, y, radius);
             this.setPixel(context, xc + i, yc + y, newColor[0], newColor[1], newColor[2]);
+            var newColor = tweenColor(colors, i, -y, radius);
             this.setPixel(context, xc + i, yc - y, newColor[0], newColor[1], newColor[2]);
         }
         for (var i = 0; i <= x; i++){
-            var newColor = TweenColor(colors, -i, y, radius);
+            var newColor = tweenColor(colors, -i, y, radius);
             this.setPixel(context, xc - i, yc + y, newColor[0], newColor[1], newColor[2]);
+            var newColor = tweenColor(colors, -i, -y, radius);
             this.setPixel(context, xc - i, yc - y, newColor[0], newColor[1], newColor[2]);
         }
         for (var i = 0; i <= y; i++){
-            var newColor = TweenColor(colors, i, x, radius);
+            var newColor = tweenColor(colors, i, x, radius);
             this.setPixel(context, xc + i, yc + x, newColor[0], newColor[1], newColor[2]);
+            var newColor = tweenColor(colors, i, -x, radius);
             this.setPixel(context, xc + i, yc - x, newColor[0], newColor[1], newColor[2]);
         }
         for (var i = 0; i <= y; i++){
-            var newColor = TweenColor(colors, -i, x, radius);
+            var newColor = tweenColor(colors, -i, x, radius);
             this.setPixel(context, xc - i, yc + x, newColor[0], newColor[1], newColor[2]);
+            var newColor = tweenColor(colors, -i, -x, radius);
             this.setPixel(context, xc - i, yc - x, newColor[0], newColor[1], newColor[2]);
         }
     },
