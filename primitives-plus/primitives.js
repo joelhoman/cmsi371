@@ -3,9 +3,9 @@
  * operations.
  */
 
-var TweenColor = function(colors, x, y, radius){
-    var xDelta = x / (radius);
-    var yDelta = y / (radius);
+var TweenColor = function (colors, x, y, radius) {
+    var xDelta = x / radius;
+    var yDelta = y / radius;
     var xColor1 = [
         (colors[0][0] - colors[1][0]) * xDelta,
         (colors[0][1] - colors[1][1]) * xDelta,
@@ -17,9 +17,9 @@ var TweenColor = function(colors, x, y, radius){
         (colors[2][2] - colors[3][2]) * yDelta
     ];
     var tweenedColor = [
-        colors[0][0] - xColor1[0],
-        colors[0][1] - xColor1[1],
-        colors[0][2] - xColor1[2]
+        (colors[0][0] - xColor1[0]) * xDelta + (colors[2][0] - yColor1[0]) * yDelta,
+        (colors[0][1] - xColor1[1]) * xDelta + (colors[2][1] - yColor1[1]) * yDelta,
+        (colors[0][2] - xColor1[2]) * xDelta + (colors[2][2] - yColor1[2]) * yDelta
     ];
     return tweenedColor;
 }
