@@ -325,17 +325,6 @@ var Primitives = {
      * permutations of that eighth's coordinates.  So we define a helper
      * function that all of the circle implementations will use...
      */
-    /*plotCirclePoints: function (context, xc, yc, x, y, color) {
-        color = color || [0, 0, 0];
-        this.setPixel(context, xc + x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc + y, yc - x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc + y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - x, yc - y, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc + x, color[0], color[1], color[2]);
-        this.setPixel(context, xc - y, yc - x, color[0], color[1], color[2]);
-    },*/
 
     plotCirclePoints: function (context, xc, yc, x, y, colors) {
 
