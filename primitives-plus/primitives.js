@@ -4,24 +4,56 @@
  */
 
 var TweenColor = function (colors, x, y, radius) {
+    var xNeg = false;
+    var yNeg = false;
+    if (x < 0 ) {
+        x = -x;
+        xNeg = true;
+    }
+    /*if ( y < 0) {
+        //y = -y;
+        yNeg = true;
+    }*/
     var xDelta = x / radius;
     var yDelta = y / radius;
-    var xColor1 = [
-        (colors[0][0] - colors[1][0]) * xDelta,
-        (colors[0][1] - colors[1][1]) * xDelta,
-        (colors[0][2] - colors[1][2]) * xDelta
-    ];
-    var yColor1 = [
-        (colors[2][0] - colors[3][0]) * yDelta,
-        (colors[2][1] - colors[3][1]) * yDelta,
-        (colors[2][2] - colors[3][2]) * yDelta
-    ];
-    var tweenedColor = [
-        (colors[0][0] - xColor1[0]) * xDelta + (colors[2][0] - yColor1[0]) * yDelta,
-        (colors[0][1] - xColor1[1]) * xDelta + (colors[2][1] - yColor1[1]) * yDelta,
-        (colors[0][2] - xColor1[2]) * xDelta + (colors[2][2] - yColor1[2]) * yDelta
-    ];
-    return tweenedColor;
+    if (!xNeg){
+        var topColor = [
+        colors[0][0] + (colors[1][0] - colors[0][0] * xDelta),
+        colors[0][1] + (colors[1][1] - colors[0][1] * xDelta),
+        colors[0][2] + (colors[1][2] - colors[0][2] * xDelta)
+        ];
+        var bottomColor = [
+            colors[2][0] + (colors[3][0] - colors[2][0] * xDelta),
+            colors[2][1] + (colors[3][1] - colors[2][1] * xDelta),
+            colors[2][2] + (colors[3][2] - colors[2][2] * xDelta)
+        ];
+    } else {
+        var topColor = [
+        colors[1][0] + (colors[0][0] - colors[1][0] * xDelta),
+        colors[1][1] + (colors[0][1] - colors[1][1] * xDelta),
+        colors[1][2] + (colors[0][2] - colors[1][2] * xDelta)
+        ];
+        var bottomColor = [
+            colors[3][0] + (colors[2][0] - colors[3][0] * xDelta),
+            colors[3][1] + (colors[2][1] - colors[3][1] * xDelta),
+            colors[3][2] + (colors[2][2] - colors[3][2] * xDelta)
+        ];
+    }
+    if (!yNeg){
+        var tweenedColor = [
+        topColor[0] + (bottomColor[0] - topColor[0] * yDelta),
+        topColor[1] + (bottomColor[1] - topColor[1] * yDelta),
+        topColor[2] + (bottomColor[2] - topColor[2] * yDelta)
+        ];
+    } else {
+        var tweenedColor = [
+        bottomColor[0] + (topColor[0] - bottomColor[0] * yDelta),
+        bottomColor[1] + (topColor[1] - bottomColor[1] * yDelta),
+        bottomColor[2] + (topColor[2] - bottomColor[2] * yDelta)
+        ];
+    }
+    
+    return topColor;
 }
 
 var Primitives = {
@@ -310,7 +342,7 @@ var Primitives = {
 
         var radius = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
 
-        colors = colors || [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ];
+        colors = colors || [ [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ], [ 0, 0, 0 ] ];
         for (var i = 0; i <= x; i++){
             var newColor = TweenColor(colors, i, y, radius);
             this.setPixel(context, xc + i, yc + y, newColor[0], newColor[1], newColor[2]);
