@@ -3,7 +3,7 @@ $(function(){
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var sunrise = new Image();
-	sunrise.src = "/../sprites/sunrise.jpg";
+	sunrise.src = "../sprites/sunrise.jpg";
 	sunrise.loaded = false;
     sunrise.addEventListener("load",function () {
 	    sunrise.loaded = true;

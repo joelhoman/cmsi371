@@ -3,7 +3,7 @@ $(function(){
     window.SpriteLibrary = window.SpriteLibrary || {};
 
     var poop = new Image();
-	poop.src = "/../sprites/poop.png";
+	poop.src = "../sprites/poop.png";
 	poop.loaded = false;
     poop.addEventListener("load",function () {
 	    poop.loaded = true;
