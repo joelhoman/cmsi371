@@ -126,8 +126,9 @@
 
         */{
             color: { r: 0.0, g: 0.5, b: 0.0 },
-            //vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
-            vertices: Shapes.toRawLineArray(Shapes.cylinder(12)),
+            vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
+            //vertices: Shapes.toRawLineArray(Shapes.cylinder(20)),
+            //vertices: Shapes.toRawTriangleArray(Shapes.cuboid(0.5,0.25,0.75)),
             mode: gl.LINES
         }
     ];
@@ -213,7 +214,7 @@
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         // Set up the rotation matrix.
-        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 0, 1, 0)));
+        gl.uniformMatrix4fv(rotationMatrix, gl.FALSE, new Float32Array(getRotationMatrix(currentRotation, 1, 1, 1)));
 
         // Display the objects.
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {

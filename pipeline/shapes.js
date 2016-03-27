@@ -128,9 +128,16 @@ var Shapes = {
             } else {
                 var next = 0;
             }
+            if ( i == 0) {
+                var other = resolution - 1;
+            } else {
+                var other = resolution - i;
+            }
             var last = 2 * resolution;
             indices.push([ i, next, (i + resolution) % last ]);
             indices.push([ (i + resolution), (next + resolution) % last, next ]);
+            indices.push([ i, next, other ]);
+            indices.push([ i + resolution, (next + resolution) % last, (other + resolution) % last]);
         }
         return {
             vertices: vertices,
