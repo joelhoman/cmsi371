@@ -126,10 +126,11 @@
 
         */{
             color: { r: 0.0, g: 0.5, b: 0.0 },
-            vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
-            //vertices: Shapes.toRawLineArray(Shapes.cylinder(20)),
-            //vertices: Shapes.toRawTriangleArray(Shapes.cuboid(0.5,0.25,0.75)),
-            mode: gl.LINES
+            //vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
+            //vertices: Shapes.toRawLineArray(Shapes.cylinder(100)),
+            vertices: Shapes.toRawTriangleArray(Shapes.cuboid(0.5,0.25,0.75)),
+            //vertices: Shapes.toRawLineArray(Shapes.sphere(6)),
+            mode: gl.TRIANGLES
         }
     ];
 

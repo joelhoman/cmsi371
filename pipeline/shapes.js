@@ -54,21 +54,47 @@ var Shapes = {
     },
 
     sphere: function (resolution) {
-        return {
-            vertices: [
-            ],
+    var RADIUS = 0.5;
 
-            indices: [
-            ],
-        };
+    var vertices = [];
+    var indices = [];
+
+    for (var i = 0; i <= resolution; i++) {
+        var theta = i * Math.PI / resolution;
+        var sinTheta = Math.sin(theta);
+        var cosTheta = Math.cos(theta);
+
+        for (var j = 0; j <= resolution; j++) {
+            var phi = j * 2 * Math.PI / resolution;
+            var sinPhi = Math.sin(phi);
+            var cosPhi = Math.cos(phi);
+
+            var x = cosPhi * sinTheta;
+            var y = cosTheta;
+            var z = sinPhi * sinTheta;
+
+            vertices.push([ RADIUS * x, RADIUS * y, RADIUS * z ]);
+
+            var first = (i * (resolution + 1)) + j;
+            var second = first + resolution + 1;
+            var next = first + 1;
+
+            indices.push([ first, second, next ]);
+            indices.push([ second, second + 1, next ]);
+        }
+    }
+    return {
+        vertices: vertices,
+        indices: indices
+    };
     },
 
-    cuboid: function (length, width, height) {
+    cuboid: function (length, height, width) {
         var X = length / 2;
         var Y = height / 2;
         var Z = width / 2;
 
-        return {
+        var result = {
             vertices: [
             [ X, Y, Z ],
             [ -X, Y, Z ],
@@ -93,8 +119,10 @@ var Shapes = {
             [ 3, 5, 7 ],
             [ 0, 2, 4 ],
             [ 0, 1, 4 ],
-            ],
+            ]
         };
+        console.log(result);
+        return result;
     },
 
     cylinder: function (resolution) {
@@ -145,6 +173,9 @@ var Shapes = {
         };
     },
 
+    group: function (group) {
+
+    },
 
     /*
      * Utility function for turning indexed vertices into a "raw" coordinate array
