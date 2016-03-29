@@ -25,5 +25,5 @@ QUnit.test( "Cuboid Test", function( assert ) {
     [ 0, 2, 4 ],
     [ 0, 1, 4 ],
   	]
-  });
+  } );
 });

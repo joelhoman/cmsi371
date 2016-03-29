@@ -73,15 +73,12 @@ var Shapes = {
             var y = cosTheta;
             var z = sinPhi * sinTheta;
 
-            vertices.push([ RADIUS * x, RADIUS * y, RADIUS * z ]);
-
-            var first = (i * (resolution + 1)) + j;
-            var second = first + resolution + 1;
-            var next = first + 1;
-
-            indices.push([ first, second, next ]);
-            indices.push([ second, second + 1, next ]);
+            vertices.push([ x * RADIUS, y * RADIUS, z * RADIUS ]);
         }
+    }
+    for (var v = 0; v < vertices.length - resolution - 2; v++) {
+        indices.push([ v, v + 1, v + resolution + 1 ]);
+        indices.push([ v + 1, resolution + v + 1, resolution + v + 2 ]);
     }
     return {
         vertices: vertices,
@@ -171,10 +168,6 @@ var Shapes = {
             vertices: vertices,
             indices: indices
         };
-    },
-
-    group: function (group) {
-
     },
 
     /*
