@@ -1,7 +1,12 @@
 var Matrix = (function () {
     // Define the constructor.
-    var matrix = function (x, y, z) {
-        return [ [ x, 0, 0, 0 ], [ 0, y, 0, 0 ], [ 0, 0, z, 0], [ 0, 0, 0, 1 ] ]? [ [ 1, 0, 0, 0], [ 0, 1, 0, 0], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1] ];
+    var matrix = function () {
+        return [
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    0, 0, 0, 1
+                ];
     };
 
     matrix.prototype.dimensions = function () {
@@ -9,86 +14,120 @@ var Matrix = (function () {
     }
 
     matrix.prototype.x = function () {
-        return this.elements[0][0];
+        return this.elements[0];
     }
 
     matrix.prototype.y = function () {
-        return this.elements[1][1];
+        return this.elements[5];
     }
+
     matrix.prototype.z = function () {
-        return this.elements[2][2];
+        return this.elements[10];
     }
-    
+
     matrix.prototype.multiply = function (s) {
         var result = new matrix();
 
-        for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-            result.elements[i] = this.elements[i] * s;
+        for (var i = 0, max = this.dimensions(); i < max; i++) {
+            for (var j = 0; max = this.dimensions(); j < max; j++) {
+                var multiplier = [];
+                for (var k = 0; k < s.length; k++) {
+                    multiplier.push(multiplier[k][i]);
+                }
+                result.elements[i][j] = this.dot(multiplier, i);
+            }
         }
 
         return result;
     };
 
-    vector.prototype.dot = function (m) {
+    matrix.prototype.dot = function (m, c) {
         var result = 0;
 
-        for (var i = 0, max = this.dimensions(); i < max; i += 1) {
-            result += this.elements[i] * v.elements[i];
+        for (var i = 0, max = this.dimensions(); i < max; i++) {
+            result += this.elements[c][i] * m.elements[i];
         }
 
         return result;
-    };
-
-    vector.prototype.cross = function (v) {
-        if (this.dimensions() !== 3 || v.dimensions() !== 3) {
-            throw "Cross product is for 3D vectors only.";
-        }
-
-        // With 3D vectors, we can just return the result directly.
-        return new Vector(
-            (this.y() * v.z()) - (this.z() * v.y()),
-            (this.z() * v.x()) - (this.x() * v.z()),
-            (this.x() * v.y()) - (this.y() * v.x())
-        );
     };
 
     matrix.prototype.translation = function (tx, ty, tz) {
-        var result = [];
-        var t = [ [ 1, 0, 0, tx ], [ 0, 1, 0, ty ], [ 0, 0, 0, tz ], [ 0, 0, 0, 1 ] ] ? [ [ 1, 0, 0, 1 ], [ 0, 1, 0, 1 ], [ 0, 0, 0, 1 ], [ 0, 0, 0, 1 ] ];
-        for (var i = 0; max = this.dimensions; i < max; i++) {
-            result.push(this.elements[i].multiply(t));
-        }
-        return result;
+        var tx = tx || 0;
+        var ty = ty || 0;
+        var tz = tz || 0;
+        var t = [ 
+                    1, 0, 0, 0,
+                    0, 1, 0, 0,
+                    0, 0, 1, 0,
+                    tx, ty, tz, 1
+                 ];
+       return t;
     }
 
     matrix.prototype.scale = function (sx, sy, sz) {
-        var result = [];
-        var s = [ [ sx, 0, 0, 0 ], [ 0, sy, 0, 0 ], [ 0, 0, sz, 0 ], [ 0, 0, 0, 1 ] ] ? [ [ 1, 0, 0, 0 ], [ 0, 1, 0, 0 ], [ 0, 0, 1, 0 ], [ 0, 0, 0, 1 ] ];
-        for (var i = 0; max = this.dimensions; i < max; i++) {
-            result.push(this.elements[i].multiply(s));
-        }
-        return result;
+        var sx = sx || 1;
+        var sy = sy || 1;
+        var sz = sz || 1;
+        var s = [ 
+                    sx, 0, 0, 0,
+                    0, sy, 0, 0,
+                    0, 0, sz, 0,
+                    0, 0, 0, 1
+                ];
+        return s;
     }
 
-    matrix.prototype.rotation = function (theta) {
-        var result = [];
-        var r = [ [ ]]
+    matrix.prototype.rotation = function (theta, x, y, z) {
+        var x = x || 0;
+        var y = y || 0;
+        var z = z || 0;
+        var theta = theta || 0;
+        var cos = Math.cos(theta);
+        var sin = Math.sin(theta);
+        var cosMinus = 1 - cos;
+        var r = [
+                    cos + Math.pow(x,2) * cosMinus,
+                    y * x * cosMinus + z * sin,
+                    z * x * cosMinus - y * sin,
+                    0,
+                    x * y * cosMinus - z * sin,
+                    cos + Math.pow(y, 2) * cosMinus,
+                    z * y * cosMinus + x * sin,
+                    0,
+                    x * z * cosMinus + y * sin,
+                    y * z * cosMinus - x * sin,
+                    cos + Math.pow(z, 2) * cosMinus,
+                    0,
+                    0, 0, 0, 1
+                ];
+        return r;
     }
 
-    vector.prototype.unit = function () {
-        // At this point, we can leverage our more "primitive" methods.
-        return this.divide(this.magnitude());
-    };
+    matrix.prototype.orthographicProjection = function (l, r, b, t, n, f) {
+        var width = r - l;
+        var height = t - b;
+        var depth = f - n;
+        var p = [
+                    2 / (width), 0, 0, 0 ,
+                    0, 2 / (height), 0, 0,
+                    0, 0, -2 / depth, 0,
+                    -(r + l) / width, -(t + b) / height, -(f + n) / depth, 1
+                ];
+        return p;
+    }
 
-    vector.prototype.projection = function (v) {
-        checkDimensions(this, v);
+    matrix.prototype.perspectiveProjection = function (l, r, b, t, n, f) {
+        var width = r - l;
+        var height = t - b;
+        var depth = f - n;
+        var p = [
+                    2 * n / width, 0, 0, 0,
+                    0, 2 * n / height, 0, 0,
+                    (r + l) / width, (t + b) / height, -(f + n) / depth, -1,
+                    0, 0, -2 * n * f / depth, 0,
+                ];
+        return p;
+    }
 
-        // Plug and chug :)
-        // The projection of u onto v is u dot the unit vector of v
-        // times the unit vector of v.
-        var unitv = v.unit();
-        return unitv.multiply(this.dot(unitv));
-    };
-
-    return vector;
+    return matrix;
 })();

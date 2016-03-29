@@ -53,6 +53,7 @@ var Shapes = {
         };
     },
 
+    //function derived from this StackOverflow post:http://stackoverflow.com/questions/20353339/having-trouble-rendering-a-sphere-in-webgl
     sphere: function (resolution) {
     var RADIUS = 0.5;
 
@@ -118,7 +119,6 @@ var Shapes = {
             [ 0, 1, 4 ],
             ]
         };
-        console.log(result);
         return result;
     },
 
