@@ -79,38 +79,36 @@
 
     // Build the objects to display.
     var objectsToDraw = [
-        {
-            color: { r: 0.0, g: 0.5, b: 0.0 },
-            //vertices: Shapes.toRawLineArray(Shapes.icosahedron()),
-            //vertices: Shapes.toRawLineArray(Shapes.cylinder(10)),
-            //vertices: Shapes.toRawLineArray(Shapes.cuboid(0.5,0.25,0.75)),
-            vertices: Shapes.toRawLineArray(Shapes.sphere(20)),
-            mode: gl.LINES
-        }
+        new Shape({})
     ];
 
     // Pass the vertices to WebGL.
-    for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
-        objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].vertices);
+    var prepDrawObjects = function (objectsToDraw) {
+        for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
+            objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].vertices);
 
-        if (!objectsToDraw[i].colors) {
-            // If we have a single color, we expand that into an array
-            // of the same color over and over.
-            objectsToDraw[i].colors = [];
-            for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3;
-                    j < maxj; j += 1) {
-                objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
-                    objectsToDraw[i].color.r,
-                    objectsToDraw[i].color.g,
-                    objectsToDraw[i].color.b
-                );
+            if (!objectsToDraw[i].colors) {
+                // If we have a single color, we expand that into an array
+                // of the same color over and over.
+                objectsToDraw[i].colors = [];
+                for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3;
+                        j < maxj; j += 1) {
+                    objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
+                        objectsToDraw[i].color.r,
+                        objectsToDraw[i].color.g,
+                        objectsToDraw[i].color.b
+                    );
+                }
+            }
+            objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
+                    objectsToDraw[i].colors);
+            if (objectsToDraw[i].children && objectsToDraw[i].children.length > 0) {
+                prepDrawObjects(objectsToDraw[i].children);
             }
         }
-        objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-                objectsToDraw[i].colors);
-    }
-
+    };
+    prepDrawObjects(objectsToDraw);
     // Initialize the shaders.
     var abort = false;
     var shaderProgram = GLSLUtilities.initSimpleShaderProgram(
@@ -160,6 +158,9 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
+        if (object.children && object.children.length > 0) {
+            drawObject(object.children);
+        }
     };
 
     /*

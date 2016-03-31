@@ -38,7 +38,7 @@ var Matrix = (function () {
                 result.push(matrix.prototype.dot(row, column));
             }
         }
-        var m = new Matrix(result, 4, 4);
+        var m = new Matrix(result, this.height, s.width);
         return m;
         
     };
