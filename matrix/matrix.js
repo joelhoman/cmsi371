@@ -25,13 +25,12 @@ var Matrix = (function () {
 
     matrix.prototype.multiply = function (s) {
         var result = [];
-
-        for (var i = 0, iMax = matrix.prototype.totalElements(); i < iMax; i += this.height) {
+        for (var i = 0, iMax = this.totalElements(); i < iMax; i += this.height) {
             var row = [];
             for (var e = i, eMax = e + this.width; e < eMax; e++) {
                 row.push(this.elements[ e ]);
             }
-            for (var c = 0, cMax = s.width(); c < cMax; c++) {
+            for (var c = 0, cMax = s.width; c < cMax; c++) {
                 var column = [];
                 for (var j = c, jMax = s.totalElements(); j < jMax; j += this.width) {
                     column.push(s.elements[ j ]);
@@ -39,14 +38,16 @@ var Matrix = (function () {
                 result.push(matrix.prototype.dot(row, column));
             }
         }
-        return result;
+        var m = new Matrix(result, 4, 4);
+        return m;
+        
     };
 
     matrix.prototype.dot = function (row, column) {
         var result = 0;
 
-        for (var i = 0, max = matrix.prototype.dimensions(); i < max; i++) {
-            result += row[i] * column[i];
+        for (var i = 0, max = row.length; i < max; i++) {
+            result += (row[i] * column[i]);
         }
         return result;
     };
@@ -77,28 +78,57 @@ var Matrix = (function () {
         return s;
     };
 
-    matrix.prototype.rotate = function (theta, x, y, z) {
-        var x = x || 0;
-        var y = y || 0;
-        var z = z || 0;
-        var theta = theta || 0;
-        var cos = Math.cos(theta);
-        var sin = Math.sin(theta);
-        var oneMinusCos = 1 - cos;
+    //taken from the bazaar
+    matrix.prototype.rotate = function (angle, x, y, z) {
+        var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
+        var s = Math.sin(angle * Math.PI / 180.0);
+        var c = Math.cos(angle * Math.PI / 180.0);
+        var oneMinusC = 1.0 - c;
+
+        x /= axisLength;
+        y /= axisLength;
+        z /= axisLength;
+
+        var x2;
+        var y2;
+        var z2;
+        var xy;
+        var yz;
+        var xz;
+        var xs;
+        var ys;
+        var zs;
+
+        x2 = x * x;
+        y2 = y * y;
+        z2 = z * z;
+        xy = x * y;
+        yz = y * z;
+        xz = x * z;
+        xs = x * s;
+        ys = y * s;
+        zs = z * s;
+
         var r = new Matrix([
-                                cos + Math.pow(x,2) * oneMinusCos,
-                                x * y * oneMinusCos - z * sin,
-                                x * z * oneMinusCos + y * sin,
-                                0,
-                                y * x * oneMinusCos + z * sin,
-                                cos + Math.pow(y, 2) * oneMinusCos,
-                                y * z * oneMinusCos - x * sin,
-                                0, 
-                                z * x * oneMinusCos - y * sin,
-                                z * y * oneMinusCos + x * sin,
-                                cos + Math.pow(z, 2) * oneMinusCos,
-                                0,
-                                0, 0, 0, 1
+                                (x2 * oneMinusC) + c,
+                                (xy * oneMinusC) + zs,
+                                (xz * oneMinusC) - ys,
+                                0.0,
+
+                                (xy * oneMinusC) - zs,
+                                (y2 * oneMinusC) + c,
+                                (yz * oneMinusC) + xs,
+                                0.0,
+
+                                (xz * oneMinusC) + ys,
+                                (yz * oneMinusC) - xs,
+                                (z2 * oneMinusC) + c,
+                                0.0,
+
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
                             ], 4, 4);
         return r;
     };
@@ -107,30 +137,30 @@ var Matrix = (function () {
         var width = r - l;
         var height = t - b;
         var depth = f - n;
-        var p = [
-                    2 / (width), 0, 0, 0 ,
-                    0, 2 / (height), 0, 0,
-                    0, 0, -2 / depth, 0,
-                    -(r + l) / width, -(t + b) / height, -(f + n) / depth, 1
-                ];
-        return matrix.prototype.multiply(p);
+        var p = new Matrix([
+                                2 / (width), 0, 0, -(r + l) / width,
+                                0, 2 / (height), 0, -(t + b) / height,
+                                0, 0, -2 / depth, -(f + n) / depth,
+                                0, 0, 0, 1
+                            ], 4, 4);
+        return p;
     };
 
     matrix.prototype.perspectiveProjection = function (l, r, b, t, n, f) {
         var width = r - l;
         var height = t - b;
         var depth = f - n;
-        var p = [
-                    2 * n / width, 0, 0, 0,
-                    0, 2 * n / height, 0, 0,
-                    (r + l) / width, (t + b) / height, -(f + n) / depth, -1,
-                    0, 0, -2 * n * f / depth, 0,
-                ];
-        return matrix.prototype.multiply(p);
+        var p = new Matrix([
+                                2 * n / width, 0, (r + l) / width, 0,
+                                0, 2 * n / height, (t + b) / height, 0,
+                                0, 0, -(f + n) / depth, -2 * n * f / depth,
+                                0, 0, -1, 0,
+                            ], 4, 4);
+        return p;
     };
 
-    matrix.prototype.convert = function () {
-        var result = new Float32Array();
+    matrix.prototype.convertToWebGL = function () {
+        var result = new Float32Array(this.elements);
         return result;
     };
 

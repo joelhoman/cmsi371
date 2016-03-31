@@ -19,10 +19,26 @@ $(function () {
     });
 
     test("Multiplication", function () {
-        var m1 = new Matrix();
-        var result = [ 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5 ];
-        var m2 = new Matrix([ 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5 ], 4, 4);
-        equal(m2.multiply(m2).elements, result.elements, " Basic Multiplication");
+        var m1 = new Matrix([
+                                3, 0, 0, 0,
+                                0, 3, 0, 0,
+                                0, 0, 3, 0,
+                                0, 0, 0, 1
+                            ], 4, 4);
+        var result = [
+                        15, 15, 15, 15,
+                        15, 15, 15, 15,
+                        15, 15, 15, 15,
+                        5, 5, 5, 5
+                     ];
+        var m2 = new Matrix([
+                                5, 5, 5, 5,
+                                5, 5, 5, 5,
+                                5, 5, 5, 5,
+                                5, 5, 5, 5
+                            ], 4, 4);
+        var result1 = m1.multiply(m2);
+        deepEqual(result1.elements, result, " Basic Multiplication");
 
     });
 
@@ -34,7 +50,8 @@ $(function () {
                                     0, 0, 1, 2,
                                     0, 0, 0, 1
                                 ], 4, 4);
-        deepEqual(m1.translate(2, 2, 2).elements, result.elements, "Basic Translation");
+        m1 = m1.translate(2, 2, 2);
+        deepEqual(m1.elements, result.elements, "Basic Translation");
     });
 
     test("Scale", function () {
@@ -45,43 +62,56 @@ $(function () {
                                     0, 0, 2, 0,
                                     0, 0, 0, 1
                                 ], 4, 4);
-        deepEqual(m1.scale(2, 2, 2).elements, result.elements, "Basic Scale");
+        m1 = m1.scale(2, 2, 2);
+        deepEqual(m1.elements, result.elements, "Basic Scale");
     });
 
-    /*test("Rotate", function () {
+    test("Rotate", function () {
         var m1 = new Matrix();
+        var v = -0.33333333333333315;
+        var r1 = 0.666666666666667;
+        var r2 = 0.6666666666666667;
+        var e = 1;
         var result = new Matrix([
-                                    ????
-                                    ????
-                                    ????
-                                    ????
+                                    v, r1, r2, 0,
+                                    r2, v, r1, 0,
+                                    r1, r2, v, 0,
+                                    0, 0, 0, 1
                                 ], 4, 4);
-        deepEqual(m1.rotate(Math.PI / 2, 5, 5, 5).elements, result.elements, "Basic Rotate");
-    });*/
-
-    test("Projection", function () {
-        var v = new Vector(3, 3, 0);
-        var vresult = v.projection(new Vector(5, 0, 0));
-
-        equal(vresult.magnitude(), 3, "3D vector projection magnitude check");
-        equal(vresult.x(), 3, "3D vector projection first element");
-        equal(vresult.y(), 0, "3D vector projection second element");
-        equal(vresult.z(), 0, "3D vector projection third element");
-
-        // Error check: projection only applies to vectors with the same
-        // number of dimensions.
-        throws(
-            function () {
-                (new Vector(5, 2)).projection(new Vector(9, 8, 1));
-            },
-            "Ensure that projection applies only to vectors with the same number of dimensions"
-        );
+        deepEqual(result.rotate(180, e, e, e).elements, result.elements, "Basic Rotate");
     });
-    
-    /*test("Conversion", function () {
-        var m = new Matrix();
-        equal(m.convert(), [ 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ], " Float32Array Conversion for WebGL");
 
-    });*/
+    test("Orthographic Projection Matrices", function () {
+       var m = new Matrix();
+       var p = m.orthographicProjection(3, 1, 2, 1, 1, 2);
+       var result = [
+                         -1.0, 0.0, 0.0, 2.0,
+                          0.0, -2.0, 0.0, 3.0,
+                          0.0, 0.0, -2.0, -3.0,
+                          0.0, 0.0, 0.0, 1.0
+                    ];
+       deepEqual(p.elements, result, "Orthogonal Projection Matrix");
+   });
+
+
+   test("Perspective Projection Matrices", function () {
+       var m = new Matrix();
+       var p = m.perspectiveProjection(3, 1, 2, 1, 1, 2);
+       var result =  [
+                         -1.0, 0.0, -2.0, 0.0,
+                          0.0, -2.0, -3.0, 0.0,
+                          0.0, 0.0, -3.0, -4.0,
+                          0.0, 0.0, -1.0, 0.0
+                     ];
+       deepEqual(p.elements, result, "Frustum Projection Matrix");
+   });
+    
+    test("Conversion", function () {
+        var m1 = new Matrix();
+        var m2 = new Matrix();
+        var result = new Float32Array(m2.elements);
+        deepEqual(m1.convertToWebGL(), result, " Float32Array Conversion for WebGL");
+
+    });
 
 });
