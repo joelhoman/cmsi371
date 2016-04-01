@@ -1,0 +1,9 @@
+Currently can translate, scale, and rotate, but line :
+
+gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "projectionMatrix"), gl.FALSE, m.convertToWebGL());
+
+is causing issues where the either the camera is being moved, or all my shapes are being scaled in the x direction.
+
+perspectiveProjection does not appear to be working properly, but orthographicProjection is.
+
+There could be more errors once these are fixed, but these appear to be immediate issues.
