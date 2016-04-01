@@ -3,6 +3,8 @@
  * takes the canvas that it will need.
  */
 (function (canvas) {
+
+    window.Shape = window.Shape || {};
     /*
      * This code does not really belong here: it should live
      * in a separate library of matrix and transformation
@@ -79,9 +81,35 @@
 
     // Build the objects to display.
     var objectsToDraw = [
-        new Shape({})
+        Shape.shape({
+                    mode: gl.LINES,
+                    vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
+                    children: [
+                                Shape.shape({
+                                    mode: gl.LINES,
+                                    vertices: (Shape.toRawLineArray(Shape.sphere(20))),
+                                }),
+                                Shape.shape({
+                                    mode: gl.LINES,
+                                    vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75)))
+                                })
+                              ]
+                  }),
+        /*Shape.shape({
+                    mode: gl.LINES,
+                    vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
+                    children: [
+                                Shape.shape({
+                                    mode: gl.LINES,
+                                    vertices: (Shape.toRawLineArray(Shape.cuboid(.6, .6, .6)))
+                                })
+                              ]
+                  }),*/
     ];
-
+    /*Shape.addChild(objectsToDraw[0], Shape.shape({
+                                        mode: gl.TRIANGLES,
+                                        vertices: (Shape.toRawTriangleArray(Shape.sphere(4)))
+                                     }));*/
     // Pass the vertices to WebGL.
     var prepDrawObjects = function (objectsToDraw) {
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
@@ -101,6 +129,7 @@
                     );
                 }
             }
+
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
             if (objectsToDraw[i].children && objectsToDraw[i].children.length > 0) {
@@ -159,7 +188,9 @@
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
         if (object.children && object.children.length > 0) {
-            drawObject(object.children);
+                for (var i = 0; i < object.children.length; i++) {
+                    drawObject(object.children[i]);
+                }
         }
     };
 

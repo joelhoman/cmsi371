@@ -1,45 +1,56 @@
-var Shape = function () {
+$(function(){
 
-	var shape = function (shapeSpecs) {
-		this.position = shapeSpecs.position || [ 0, 0, 0 ];
-		this.scale = shapeSpecs.scale || [ 1, 1, 1 ];
-		this.rotation = shapeSpecs.rotation || [ 360, 360, 360 ];
+	window.Shape = window.Shape || {};
+
+	Shape.shape = function (shapeSpecs) {
+		this.instanceTransformation = shapeSpecs.instanceTransformation || { 
+																				translation: [ 0, 0, 0 ],
+																				scale: [ 1, 1, 1 ],
+																				rotation: [ 360, 0, 0, 0 ]
+																		   };
 		this.children = shapeSpecs.children || [];
 		this.color = shapeSpecs.color || { r: 0.0, g: 0.0, b: 0.0 };
-		this.vertices = vertices || { vertices: [], indices: [] };
-		this.mode = mode || gl.LINES;
-
+		this.vertices = shapeSpecs.vertices || { vertices: [], indices: [] };
+		this.mode = shapeSpecs.mode || null;
+		return {
+					position: this.position,
+					scale: this.scale,
+					rotation: this.rotation,
+					children: this.children,
+					color: this.color,
+					vertices: this.vertices,
+					mode: this.mode
+			   }
 	};
 
-	shape.prototype.translate = function (tx, ty,tz) {
-
+	Shape.translate = function (shape, tx, ty,tz) {
+		shape.instanceTransformation.translation[ 0 ] += tx;
+		shape.instanceTransformation.translation[ 1 ] += ty;
+		shape.instanceTransformation.translation[ 2 ] += tz;
 	};
 
-	shape.prototype.scale = function (sx, sy, sz) {
-
+	Shape.scale = function (shape, sx, sy, sz) {
+		shape.instanceTransformation.scale[ 0 ] *= sx;
+		shape.instanceTransformation.scale[ 1 ] *= sy;
+		shape.instanceTransformation.scale[ 2 ] *= sz;
 	};
 
-	shape.prototype.rotate = function (theta, rx, ry, rz) {
-
+	Shape.rotate = function (shape, theta, rx, ry, rz) {
+		shape.instanceTransformation.rotation[ 0 ] += theta;
+		shape.instanceTransformation.rotation[ 1 ] = rx;
+		shape.instanceTransformation.rotation[ 2 ] = ry;
+		shape.instanceTransformation.rotation[ 3 ] = rz;
 	};
 
-	shape.prototype.addChild = function (child) {
-		this.children.push(child);
+	Shape.addChild = function (shape, child) {
+		shape.children.push(child);
 	};
 
-	shape.prototype.popChild = function () {
-		this.children.pop();
+	Shape.popChild = function (shape) {
+		shape.children.pop();
 	};
 
-	shape.prototype.setColor = function (color) {
-		this.color = color;
-	};
-
-	shape.prototype.getPolygonMesh = function () {
-		return this.polygonMesh;
-	}
-
-	shape.prototype.icosahedron = function () {
+	Shape.icosahedron = function () {
 		var X = 0.525731112119133606;
         var Z = 0.850650808352039932;
 
@@ -84,7 +95,7 @@ var Shape = function () {
 		        };
 	};
 
-	shape.prototype.sphere = function (resolution) {
+	Shape.sphere = function (resolution) {
 		var RADIUS = 0.5;
 
 	    var vertices = [];
@@ -117,7 +128,7 @@ var Shape = function () {
 			    };
 	};
 
-	shape.prototype.cuboid = function (length, height, width) {
+	Shape.cuboid = function (length, height, width) {
 		var X = length / 2;
         var Y = height / 2;
         var Z = width / 2;
@@ -152,44 +163,55 @@ var Shape = function () {
         return result;
 	};
 
-	shape.prototype.cylinder = function (resolution) {
-		var RADIUS = 0.5;
+	Shape.cylinder = function (resolution) {
+		var RADIUS = 0.25;
+        var HEIGHT = 0.5;
 
-	    var vertices = [];
-	    var indices = [];
-
-	    for (var i = 0; i <= resolution; i++) {
-	        var theta = i * Math.PI / resolution;
-	        var sinTheta = Math.sin(theta);
-	        var cosTheta = Math.cos(theta);
-
-	        for (var j = 0; j <= resolution; j++) {
-	            var phi = j * 2 * Math.PI / resolution;
-	            var sinPhi = Math.sin(phi);
-	            var cosPhi = Math.cos(phi);
-
-	            var x = cosPhi * sinTheta;
-	            var y = cosTheta;
-	            var z = sinPhi * sinTheta;
-
-	            vertices.push([ x * RADIUS, y * RADIUS, z * RADIUS ]);
-	        }
-	    }
-	    for (var v = 0; v < vertices.length - resolution - 2; v++) {
-	        indices.push([ v, v + 1, v + resolution + 1 ]);
-	        indices.push([ v + 1, resolution + v + 1, resolution + v + 2 ]);
-	    }
-	    return {
-			    	vertices: vertices,
-			    	indices: indices
-			    };
+        var vertices = [];
+        var indices = [];
+        var thetaDelta = 2 * Math.PI / resolution;
+        var currentTheta = 0.0;
+        for (var i = 0; i < resolution; i++) {
+            vertices.push([
+                RADIUS * Math.cos(currentTheta),
+                HEIGHT,
+                RADIUS * Math.sin(currentTheta)
+                ])
+            currentTheta += thetaDelta;
+        }
+        thetaDelta = 2 * Math.PI / resolution;
+        for (var i = 0; i < resolution; i++) {
+            vertices.push([
+                RADIUS * Math.cos(currentTheta),
+                -HEIGHT,
+                RADIUS * Math.sin(currentTheta)
+                ])
+            currentTheta += thetaDelta;
+        }
+        for (var i = 0; i < resolution; i++) {
+            if (i + 1 < resolution) {
+                var next = i + 1;
+            } else {
+                var next = 0;
+            }
+            if ( i == 0) {
+                var other = resolution - 1;
+            } else {
+                var other = resolution - i;
+            }
+            var last = 2 * resolution;
+            indices.push([ i, next, (i + resolution) % last ]);
+            indices.push([ (i + resolution), (next + resolution) % last, next ]);
+            indices.push([ i, next, other ]);
+            indices.push([ i + resolution, (next + resolution) % last, (other + resolution) % last]);
+        }
+        return {
+            vertices: vertices,
+            indices: indices
+        };
 	};
 
-	shape.prototype.setMode = function (mode) {
-		this.mode = mode;
-	}
-
-	shape.prototype.toRawTriangleArray = function (indexedVertices) {
+	Shape.toRawTriangleArray = function (indexedVertices) {
         var result = [];
 
         for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
@@ -205,7 +227,7 @@ var Shape = function () {
         return result;
     };
 
-    shape.protoype.toRawLineArray = function (indexedVertices) {
+    Shape.toRawLineArray = function (indexedVertices) {
         var result = [];
 
         for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
@@ -224,6 +246,4 @@ var Shape = function () {
 
         return result;
     };
-
-    return shape;
-};
+}());
