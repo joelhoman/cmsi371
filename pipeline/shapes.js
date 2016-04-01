@@ -9,8 +9,8 @@ var Shapes = {
      */
     icosahedron: function () {
         // These variables are actually "constants" for icosahedron coordinates.
-        var X = 0.525731112119133606;
-        var Z = 0.850650808352039932;
+        var X = 0.525731112119133606,
+            Z = 0.850650808352039932;
 
         return {
             vertices: [
@@ -53,120 +53,36 @@ var Shapes = {
         };
     },
 
-    //function derived from this StackOverflow post:http://stackoverflow.com/questions/20353339/having-trouble-rendering-a-sphere-in-webgl
-    sphere: function (resolution) {
-    var RADIUS = 0.5;
-
-    var vertices = [];
-    var indices = [];
-
-    for (var i = 0; i <= resolution; i++) {
-        var theta = i * Math.PI / resolution;
-        var sinTheta = Math.sin(theta);
-        var cosTheta = Math.cos(theta);
-
-        for (var j = 0; j <= resolution; j++) {
-            var phi = j * 2 * Math.PI / resolution;
-            var sinPhi = Math.sin(phi);
-            var cosPhi = Math.cos(phi);
-
-            var x = cosPhi * sinTheta;
-            var y = cosTheta;
-            var z = sinPhi * sinTheta;
-
-            vertices.push([ x * RADIUS, y * RADIUS, z * RADIUS ]);
-        }
-    }
-    for (var v = 0; v < vertices.length - resolution - 2; v++) {
-        indices.push([ v, v + 1, v + resolution + 1 ]);
-        indices.push([ v + 1, resolution + v + 1, resolution + v + 2 ]);
-    }
-    return {
-        vertices: vertices,
-        indices: indices
-    };
-    },
-
-    cuboid: function (length, height, width) {
-        var X = length / 2;
-        var Y = height / 2;
-        var Z = width / 2;
-
-        var result = {
+    /*
+     * Returns the vertices for a small cube.  Note the breakdown into triangles.
+     */
+    cube: function () {
+        return {
             vertices: [
-            [ X, Y, Z ],
-            [ -X, Y, Z ],
-            [ X, -Y, Z ],
-            [ X, Y, -Z ],
-            [ -X, -Y, Z ],
-            [ -X, Y, -Z ],
-            [ X, -Y, -Z ],
-            [-X, -Y, -Z ],
+                [ 0.5, 0.5, 0.5 ],
+                [ 0.5, 0.5, -0.5 ],
+                [ -0.5, 0.5, -0.5 ],
+                [ -0.5, 0.5, 0.5 ],
+                [ 0.5, -0.5, 0.5 ],
+                [ 0.5, -0.5, -0.5 ],
+                [ -0.5, -0.5, -0.5 ],
+                [ -0.5, -0.5, 0.5 ]
             ],
 
             indices: [
-            [ 0, 3, 6 ],
-            [ 0, 2, 6 ],
-            [ 1, 5, 7 ],
-            [ 1, 4, 7 ],
-            [ 0, 3, 5 ],
-            [ 0, 1, 5 ],
-            [ 2, 6, 7 ],
-            [ 2, 4, 7 ],
-            [ 3, 6, 7 ],
-            [ 3, 5, 7 ],
-            [ 0, 2, 4 ],
-            [ 0, 1, 4 ],
+                [ 0, 1, 3 ],
+                [ 2, 3, 1 ],
+                [ 0, 3, 4 ],
+                [ 7, 4, 3 ],
+                [ 0, 4, 1 ],
+                [ 5, 1, 4 ],
+                [ 1, 5, 6 ],
+                [ 2, 1, 6 ],
+                [ 2, 7, 3 ],
+                [ 6, 7, 2 ],
+                [ 4, 7, 6 ],
+                [ 5, 4, 6 ]
             ]
-        };
-        return result;
-    },
-
-    cylinder: function (resolution) {
-        var RADIUS = 0.25;
-        var HEIGHT = 0.5;
-
-        var vertices = [];
-        var indices = [];
-        var thetaDelta = 2 * Math.PI / resolution;
-        var currentTheta = 0.0;
-        for (var i = 0; i < resolution; i++) {
-            vertices.push([
-                RADIUS * Math.cos(currentTheta),
-                HEIGHT,
-                RADIUS * Math.sin(currentTheta)
-                ])
-            currentTheta += thetaDelta;
-        }
-        thetaDelta = 2 * Math.PI / resolution;
-        for (var i = 0; i < resolution; i++) {
-            vertices.push([
-                RADIUS * Math.cos(currentTheta),
-                -HEIGHT,
-                RADIUS * Math.sin(currentTheta)
-                ])
-            currentTheta += thetaDelta;
-        }
-        for (var i = 0; i < resolution; i++) {
-            if (i + 1 < resolution) {
-                var next = i + 1;
-            } else {
-                var next = 0;
-            }
-            if ( i == 0) {
-                var other = resolution - 1;
-            } else {
-                var other = resolution - i;
-            }
-            var last = 2 * resolution;
-            indices.push([ i, next, (i + resolution) % last ]);
-            indices.push([ (i + resolution), (next + resolution) % last, next ]);
-            indices.push([ i, next, other ]);
-            indices.push([ i + resolution, (next + resolution) % last, (other + resolution) % last]);
-        }
-        return {
-            vertices: vertices,
-            indices: indices
         };
     },
 
@@ -175,10 +91,14 @@ var Shapes = {
      * arranged as triangles.
      */
     toRawTriangleArray: function (indexedVertices) {
-        var result = [];
+        var result = [],
+            i,
+            j,
+            maxi,
+            maxj;
 
-        for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
-            for (var j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+        for (i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            for (j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
                 result = result.concat(
                     indexedVertices.vertices[
                         indexedVertices.indices[i][j]
@@ -195,10 +115,14 @@ var Shapes = {
      * arranged as line segments.
      */
     toRawLineArray: function (indexedVertices) {
-        var result = [];
+        var result = [],
+            i,
+            j,
+            maxi,
+            maxj;
 
-        for (var i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
-            for (var j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
+        for (i = 0, maxi = indexedVertices.indices.length; i < maxi; i += 1) {
+            for (j = 0, maxj = indexedVertices.indices[i].length; j < maxj; j += 1) {
                 result = result.concat(
                     indexedVertices.vertices[
                         indexedVertices.indices[i][j]

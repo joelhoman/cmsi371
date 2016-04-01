@@ -4,22 +4,22 @@ $(function(){
 
 	Shape.shape = function (shapeSpecs) {
 		this.instanceTransformation = shapeSpecs.instanceTransformation || { 
-																				translation: [ 0, 0, 0 ],
+																				translation: [ 1, 1, 1 ],
 																				scale: [ 1, 1, 1 ],
-																				rotation: [ 360, 0, 0, 0 ]
+																				rotation: [ 360, 1, 1, 1 ]
 																		   };
 		this.children = shapeSpecs.children || [];
 		this.color = shapeSpecs.color || { r: 0.0, g: 0.0, b: 0.0 };
 		this.vertices = shapeSpecs.vertices || { vertices: [], indices: [] };
 		this.mode = shapeSpecs.mode || null;
+		this.axis = shapeSpecs.axis || { x: 0, y: 1, z: 0};
 		return {
-					position: this.position,
-					scale: this.scale,
-					rotation: this.rotation,
+					instanceTransformation: this.instanceTransformation,
 					children: this.children,
 					color: this.color,
 					vertices: this.vertices,
-					mode: this.mode
+					mode: this.mode,
+					axis: this.axis
 			   }
 	};
 
