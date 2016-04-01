@@ -4,7 +4,7 @@ $(function(){
 
 	Shape.shape = function (shapeSpecs) {
 		this.instanceTransformation = shapeSpecs.instanceTransformation || { 
-																				translation: [ 1, 1, 1 ],
+																				translation: [ 0, 0, 0 ],
 																				scale: [ 1, 1, 1 ],
 																				rotation: [ 360, 1, 1, 1 ]
 																		   };
@@ -21,25 +21,6 @@ $(function(){
 					mode: this.mode,
 					axis: this.axis
 			   }
-	};
-
-	Shape.translate = function (shape, tx, ty,tz) {
-		shape.instanceTransformation.translation[ 0 ] += tx;
-		shape.instanceTransformation.translation[ 1 ] += ty;
-		shape.instanceTransformation.translation[ 2 ] += tz;
-	};
-
-	Shape.scale = function (shape, sx, sy, sz) {
-		shape.instanceTransformation.scale[ 0 ] *= sx;
-		shape.instanceTransformation.scale[ 1 ] *= sy;
-		shape.instanceTransformation.scale[ 2 ] *= sz;
-	};
-
-	Shape.rotate = function (shape, theta, rx, ry, rz) {
-		shape.instanceTransformation.rotation[ 0 ] += theta;
-		shape.instanceTransformation.rotation[ 1 ] = rx;
-		shape.instanceTransformation.rotation[ 2 ] = ry;
-		shape.instanceTransformation.rotation[ 3 ] = rz;
 	};
 
 	Shape.addChild = function (shape, child) {

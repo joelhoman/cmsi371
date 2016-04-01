@@ -169,15 +169,20 @@
         Shape.shape({
                     mode: gl.LINES,
                     vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
+                    instanceTransformation: {
+                                                translation: [ -.5, 0, 0],
+                                                scale: [ 1, 1, 1 ],
+                                                rotation: [ 360, 1, 1, 1]
+                                            },
                     children: [
                                 Shape.shape({
                                     mode: gl.LINES,
                                     vertices: (Shape.toRawLineArray(Shape.sphere(20))),
-                                    instanceTransformation: {
-                                                                translation: [ 1, 2, 1],
+                                     instanceTransformation: {
+                                                                translation: [ 0, .5, 0],
                                                                 scale: [ 1, 1, 1 ],
                                                                 rotation: [ 360, 1, 1, 1]
-                                                            }
+                                                            },
                                 }),
                                 Shape.shape({
                                     mode: gl.LINES,
@@ -293,7 +298,7 @@
         var sx = object.instanceTransformation.scale[ 0 ];
         var sy = object.instanceTransformation.scale[ 1 ];
         var sz = object.instanceTransformation.scale[ 2 ];
-        var sMatrix = new Matrix().scale(theta, sx, sy, sz);
+        var sMatrix = new Matrix().scale(sx, sy, sz);
 
         var theta = object.instanceTransformation.rotation[ 0 ];
         var rx = object.instanceTransformation.rotation[ 1 ];
@@ -302,8 +307,11 @@
         var rMatrix = new Matrix().rotate(theta, rx, ry, rz);
 
         var m = new Matrix();
-        m = m.multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
-        gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "modelViewMatrix"), gl.FALSE, m.convertToWebGL());
+        m = m.multiply(tMatrix)
+        m = m.multiply(sMatrix)
+        m = m.multiply(rMatrix);
+        console.log(m.elements);
+        gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "projectionMatrix"), gl.FALSE, m.convertToWebGL());
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);

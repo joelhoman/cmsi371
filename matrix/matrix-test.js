@@ -37,8 +37,31 @@ $(function () {
                                 5, 5, 5, 5,
                                 5, 5, 5, 5
                             ], 4, 4);
+        var m3 = new Matrix([
+                                1, 78, 46, 28,
+                                23, 23, 43, 43,
+                                12, 0, 1, 0,
+                                37, 28, 28, 16
+                              ], 4, 4);
+
+        var m4 = new Matrix([
+                              1, 2, 3, 4,
+                              5, 7, 8, 9,
+                              10, 11, 12, 13,
+                              14, 15, 16, 17
+                            ], 4, 4);
+        var result2 = new Matrix([
+                                  1243, 1474, 1627, 1780,
+                                  1170, 1325, 1457, 1589,
+                                  22, 35, 48, 61,
+                                  681, 818, 927, 1036
+                                ], 4, 4);
         var result1 = m1.multiply(m2);
+        var expected = m3.multiply(m4);
         deepEqual(result1.elements, result, " Basic Multiplication");
+        deepEqual(expected.elements, result2.elements, "More Complex Multiplication");
+
+
 
     });
 
