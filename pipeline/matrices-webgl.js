@@ -307,10 +307,7 @@
         var rMatrix = new Matrix().rotate(theta, rx, ry, rz);
 
         var m = new Matrix();
-        m = m.multiply(tMatrix)
-        m = m.multiply(sMatrix)
-        m = m.multiply(rMatrix);
-        console.log(m.elements);
+        m = m.multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
         gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "projectionMatrix"), gl.FALSE, m.convertToWebGL());
 
         // Set the varying vertex coordinates.

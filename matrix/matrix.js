@@ -184,7 +184,7 @@ var Matrix = (function () {
                             this.elements[7],
                             this.elements[11],
                             this.elements[15] 
-                        ]
+                        ];
         var result = new Float32Array(this.elements);
         return result;
     };

@@ -1,29 +1,8 @@
-QUnit.test( "Cuboid Test", function( assert ) {
-  assert.equal( Shapes.cuboid(.5,.5,.5),
-  {
-  	vertices: [
-  	[ .25, .25, .25 ],
-    [ -.25, .25, .25 ],
-    [ .25, -.25, .25 ],
-    [ .25, .25, -.25 ],
-    [ -.25, -.25, .25 ],
-    [ -.25, .25, -.25 ],
-    [ .25, -.25, -.25 ],
-    [-.25, -.25, -.25 ],
-  	],
-  	indices: [
-  	[ 0, 3, 6 ],
-    [ 0, 2, 6 ],
-    [ 1, 5, 7 ],
-    [ 1, 4, 7 ],
-    [ 0, 3, 5 ],
-    [ 0, 1, 5 ],
-    [ 2, 6, 7 ],
-    [ 2, 4, 7 ],
-    [ 3, 6, 7 ],
-    [ 3, 5, 7 ],
-    [ 0, 2, 4 ],
-    [ 0, 1, 4 ],
-  	]
-  } );
+QUnit.test( "Default Shape", function() {
+  var s = Shape.shape({}); 
+  deepEqual(s.children, [], "Child Test");
+  deepEqual(s.color, { r: 0, g: 0, b: 0 }, "Color Test");
+  deepEqual(s.vertices, { vertices: [], indices: [] }, "Vertex Test");
+  equal(s.mode, null, "Mode Test");
+  deepEqual(s.axis, { x: 0, y: 1, z: 0 }, "Axis Test");
 });
