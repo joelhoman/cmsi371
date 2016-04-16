@@ -3,11 +3,10 @@ $(function(){
 	window.Shape = window.Shape || {};
 
 	Shape.shape = function (shapeSpecs) {
-		this.instanceTransformation = shapeSpecs.instanceTransformation || { 
-																				translation: [ 0, 0, 0 ],
-																				scale: [ 1, 1, 1 ],
-																				rotation: [ 360, 1, 1, 1 ]
-																		   };
+		this.instanceTransformation = shapeSpecs.instanceTransformation || {};
+		this.instanceTransformation.translation = this.instanceTransformation.translation || [ 0, 0, 0 ];
+		this.instanceTransformation.scale = this.instanceTransformation.scale || [ 1, 1, 1 ];
+		this.instanceTransformation.rotation = this.instanceTransformation.rotation || [ 0, 0, 0, 0 ];
 		this.children = shapeSpecs.children || [];
 		this.color = shapeSpecs.color || { r: 0.0, g: 0.0, b: 0.0 };
 		this.vertices = shapeSpecs.vertices || { vertices: [], indices: [] };

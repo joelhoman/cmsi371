@@ -67,18 +67,16 @@
                     mode: gl.LINES,
                     vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
                     instanceTransformation: {
-                                                translation: [ -.5, 0, 0],
-                                                scale: [ 1, 1, 1 ],
-                                                rotation: [ 360, 1, 1, 1]
+                                                translation: [ -.5, 0, 0 ],
                                             },
                     children: [
                                 Shape.shape({
                                     mode: gl.LINES,
                                     vertices: (Shape.toRawLineArray(Shape.sphere(20))),
                                      instanceTransformation: {
-                                                                translation: [ 0, .5, 0],
+                                                                translation: [ 0, .5, 0 ],
                                                                 scale: [ 1, 1, 1 ],
-                                                                rotation: [ 360, 1, 1, 1]
+                                                                rotation: [ 0, 0, 0, 0 ]
                                                             },
                                 }),
                                 Shape.shape({
@@ -87,16 +85,15 @@
                                 })
                               ]
                   }),
-        /*Shape.shape({
+        Shape.shape({
                     mode: gl.LINES,
                     vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
-                    children: [
-                                Shape.shape({
-                                    mode: gl.LINES,
-                                    vertices: (Shape.toRawLineArray(Shape.cuboid(.6, .6, .6)))
-                                })
-                              ]
-                  }),*/
+                    instanceTransformation: {
+                                                translation: [ -2, 0, 0 ],
+                                                scale: [ 1, 1, 1 ],
+                                                rotation: [ 0, 0, 0 ]
+                                            },
+                  }),
     ];
 
     // Pass the vertices to WebGL.
@@ -172,14 +169,28 @@
      * Displays an individual object, including a transformation that now varies
      * for each object drawn.
      */
-    drawObject = function (object) {
-        // Set the varying colors.
+    drawObject = function (object, parentMatrix) {
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-        // Set up the model-view matrix, if an axis is included.  If not, we
-        // specify the identity matrix.
+        var currentMatrix = getFinalMatrix(object);
 
+        if (parentMatrix) {
+            currentMatrix = currentMatrix.multiply(parentMatrix);
+        }
+        gl.uniformMatrix4fv(modelViewMatrix, gl.FALSE, currentMatrix.convertToWebGL());
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
+        gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
+        gl.drawArrays(object.mode, 0, object.vertices.length / 3);
+        if (object.children.length > 0) {
+            for (var i = 0; i < object.children.length; i++) {
+                    drawObject(object.children[i], currentMatrix);
+                }
+        }
+    };
+
+    getFinalMatrix = function (object) {
         var tx = object.instanceTransformation.translation[ 0 ];
         var ty = object.instanceTransformation.translation[ 1 ];
         var tz = object.instanceTransformation.translation[ 2 ];
@@ -190,27 +201,13 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = object.instanceTransformation.rotation[ 0 ] ? currentRotation : 1;
+        var theta = object.instanceTransformation.rotation[ 0 ] + currentRotation;
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
         var rMatrix = new Matrix().rotate(theta, rx, ry, rz);
-
-        var m = new Matrix();
-        m = m.multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
-        gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "modelViewMatrix"), gl.FALSE, m.convertToWebGL());
-
-        // Set the varying vertex coordinates.
-        gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
-        gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.drawArrays(object.mode, 0, object.vertices.length / 3);
-        if (object.children.length > 0) {
-            for (var i = 0; i < object.children.length; i++) {
-                    drawObject(object.children[i]);
-                }
-        }
-    };
-
+        return new Matrix().multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
+    }
     /*
      * Displays the scene.
      */
