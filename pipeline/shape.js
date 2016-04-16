@@ -12,14 +12,12 @@ $(function(){
 		this.color = shapeSpecs.color || { r: 0.0, g: 0.0, b: 0.0 };
 		this.vertices = shapeSpecs.vertices || { vertices: [], indices: [] };
 		this.mode = shapeSpecs.mode || null;
-		this.axis = shapeSpecs.axis || { x: 0, y: 1, z: 0};
 		return {
 					instanceTransformation: this.instanceTransformation,
 					children: this.children,
 					color: this.color,
 					vertices: this.vertices,
 					mode: this.mode,
-					axis: this.axis
 			   }
 	};
 

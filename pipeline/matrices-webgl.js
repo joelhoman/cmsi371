@@ -44,109 +44,6 @@
     var j;
     var maxj;
 
-    /*
-     * This code does not really belong here: it should live
-     * in a separate library of matrix and transformation
-     * functions.  It is here only to show you how matrices
-     * can be used with GLSL.
-     *
-     * Based on the original glRotate reference:
-     *     http://www.opengl.org/sdk/docs/man/xhtml/glRotate.xml
-     */
-    var getRotationMatrix = function (angle, x, y, z) {
-        // In production code, this function should be associated
-        // with a matrix object with associated functions.
-        var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
-        var s = Math.sin(angle * Math.PI / 180.0);
-        var c = Math.cos(angle * Math.PI / 180.0);
-        var oneMinusC = 1.0 - c;
-
-        // We can't calculate this until we have normalized
-        // the axis vector of rotation.
-        var x2; // "2" for "squared."
-        var y2;
-        var z2;
-        var xy;
-        var yz;
-        var xz;
-        var xs;
-        var ys;
-        var zs;
-
-        // Normalize the axis vector of rotation.
-        x /= axisLength;
-        y /= axisLength;
-        z /= axisLength;
-
-        // *Now* we can calculate the other terms.
-        x2 = x * x;
-        y2 = y * y;
-        z2 = z * z;
-        xy = x * y;
-        yz = y * z;
-        xz = x * z;
-        xs = x * s;
-        ys = y * s;
-        zs = z * s;
-
-        // GL expects its matrices in column major order.
-        return [
-            (x2 * oneMinusC) + c,
-            (xy * oneMinusC) + zs,
-            (xz * oneMinusC) - ys,
-            0.0,
-
-            (xy * oneMinusC) - zs,
-            (y2 * oneMinusC) + c,
-            (yz * oneMinusC) + xs,
-            0.0,
-
-            (xz * oneMinusC) + ys,
-            (yz * oneMinusC) - xs,
-            (z2 * oneMinusC) + c,
-            0.0,
-
-            0.0,
-            0.0,
-            0.0,
-            1.0
-        ];
-    };
-
-    /*
-     * This is another function that really should reside in a
-     * separate library.  But, because the creation of that library
-     * is part of the student course work, we leave it here for
-     * later refactoring and adaptation by students.
-     */
-    var getOrthoMatrix = function (left, right, bottom, top, zNear, zFar) {
-        var width = right - left;
-        var height = top - bottom;
-        var depth = zFar - zNear;
-
-        return [
-            2.0 / width,
-            0.0,
-            0.0,
-            0.0,
-
-            0.0,
-            2.0 / height,
-            0.0,
-            0.0,
-
-            0.0,
-            0.0,
-            -2.0 / depth,
-            0.0,
-
-            -(right + left) / width,
-            -(top + bottom) / height,
-            -(zFar + zNear) / depth,
-            1.0
-        ];
-    };
-
     // Grab the WebGL rendering context.
     gl = GLSLUtilities.getGL(canvas);
     if (!gl) {
@@ -224,7 +121,7 @@
 
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
-            if (objectsToDraw[i].children && objectsToDraw[i].children.length > 0) {
+            if (objectsToDraw[i].children.length > 0) {
                 prepDrawObjects(objectsToDraw[i].children);
             }
         }
@@ -282,13 +179,6 @@
 
         // Set up the model-view matrix, if an axis is included.  If not, we
         // specify the identity matrix.
-        gl.uniformMatrix4fv(modelViewMatrix, gl.FALSE, new Float32Array(object.axis ?
-                getRotationMatrix(currentRotation, object.axis.x, object.axis.y, object.axis.z) :
-                [1, 0, 0, 0, // N.B. In a full-fledged matrix library, the identity
-                 0, 1, 0, 0, //      matrix should be available as a function.
-                 0, 0, 1, 0,
-                 0, 0, 0, 1]
-            ));
 
         var tx = object.instanceTransformation.translation[ 0 ];
         var ty = object.instanceTransformation.translation[ 1 ];
@@ -300,7 +190,7 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = object.instanceTransformation.rotation[ 0 ];
+        var theta = object.instanceTransformation.rotation[ 0 ] ? currentRotation : 1;
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
@@ -308,13 +198,13 @@
 
         var m = new Matrix();
         m = m.multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
-        gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "projectionMatrix"), gl.FALSE, m.convertToWebGL());
+        gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "modelViewMatrix"), gl.FALSE, m.convertToWebGL());
 
         // Set the varying vertex coordinates.
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
-        if (object.children && object.children.length > 0) {
+        if (object.children.length > 0) {
             for (var i = 0; i < object.children.length; i++) {
                     drawObject(object.children[i]);
                 }
