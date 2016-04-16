@@ -67,21 +67,23 @@
                     mode: gl.LINES,
                     vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
                     instanceTransformation: {
-                                                translation: [ -.5, 0, 0 ],
+                                                translation: [ 0, 0, 0 ],
                                             },
                     children: [
                                 Shape.shape({
                                     mode: gl.LINES,
                                     vertices: (Shape.toRawLineArray(Shape.sphere(20))),
                                      instanceTransformation: {
-                                                                translation: [ 0, .5, 0 ],
+                                                                translation: [ 1, 1, 0 ],
                                                                 scale: [ 1, 1, 1 ],
-                                                                rotation: [ 0, 0, 0, 0 ]
                                                             },
                                 }),
                                 Shape.shape({
                                     mode: gl.LINES,
-                                    vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75)))
+                                    vertices: (Shape.toRawLineArray(Shape.cuboid(.5, .5, .5))),
+                                    instanceTransformation: { 
+                                                                translation: [ 2, 0, 0 ],
+                                                            },
                                 })
                               ]
                   }),
@@ -174,7 +176,6 @@
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
         var currentMatrix = getFinalMatrix(object);
-
         if (parentMatrix) {
             currentMatrix = currentMatrix.multiply(parentMatrix);
         }
@@ -201,12 +202,12 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = object.instanceTransformation.rotation[ 0 ] + currentRotation;
+        var theta = object.instanceTransformation.rotation[ 0 ];
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
         var rMatrix = new Matrix().rotate(theta, rx, ry, rz);
-        return new Matrix().multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
+        return new Matrix().multiply(tMatrix).multiply(rMatrix).multiply(sMatrix);
     }
     /*
      * Displays the scene.
