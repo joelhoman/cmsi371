@@ -92,13 +92,13 @@ $(function () {
     test("Rotate", function () {
         var m1 = new Matrix();
         var v = -0.33333333333333315;
-        var r1 = 0.666666666666667;
-        var r2 = 0.6666666666666667;
+        var r1 = 0.6666666666666669;
+        var r2 = 0.6666666666666669;
         var e = 1;
         var result = new Matrix([
-                                    v, r1, r2, 0,
-                                    r2, v, r1, 0,
-                                    r1, r2, v, 0,
+                                    v, r2, r1, 0,
+                                    r1, v, r2, 0,
+                                    r2, r1, v, 0,
                                     0, 0, 0, 1
                                 ], 4, 4);
         deepEqual(result.rotate(180, e, e, e).elements, result.elements, "Basic Rotate");
