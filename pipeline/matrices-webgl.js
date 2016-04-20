@@ -64,38 +64,40 @@
     // rotation axis now.
    objectsToDraw = [
         Shape.shape({
-                    mode: gl.LINES,
-                    vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
-                    instanceTransformation: {
-                                                translation: [ 0, 0, 0 ],
-                                            },
-                    children: [
-                                Shape.shape({
-                                    mode: gl.LINES,
-                                    vertices: (Shape.toRawLineArray(Shape.sphere(20))),
-                                     instanceTransformation: {
-                                                                translation: [ 1, 1, 0 ],
-                                                                scale: [ 1, 1, 1 ],
-                                                            },
-                                }),
-                                Shape.shape({
-                                    mode: gl.LINES,
-                                    vertices: (Shape.toRawLineArray(Shape.cuboid(.5, .5, .5))),
-                                    instanceTransformation: { 
-                                                                translation: [ 2, 0, 0 ],
-                                                            },
-                                })
-                              ]
-                  }),
+            mode: gl.LINES,
+            vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
+            instanceTransformation: {
+                translation: [ 0, 0, 0 ],
+                scale: [ 1, 1, 1 ],
+                rotation: [ 45, 1, 0, 0 ]
+            },
+            children: [
+            Shape.shape({
+                mode: gl.LINES,
+                vertices: (Shape.toRawLineArray(Shape.sphere(20))),
+                instanceTransformation: {
+                translation: [ 1, 1, 0 ],
+                scale: [ 1, 1, 1 ],
+            },
+            }),
+            Shape.shape({
+                mode: gl.LINES,
+                vertices: (Shape.toRawLineArray(Shape.cuboid(.5, .5, .5))),
+                instanceTransformation: { 
+                    translation: [ 2, 0, 0 ],
+                },
+            })
+            ]
+        }),
         Shape.shape({
-                    mode: gl.LINES,
-                    vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
-                    instanceTransformation: {
-                                                translation: [ -2, 0, 0 ],
-                                                scale: [ 1, 1, 1 ],
-                                                rotation: [ 0, 0, 0 ]
-                                            },
-                  }),
+        mode: gl.LINES,
+            vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
+            instanceTransformation: {
+                translation: [ -2, 0, 0 ],
+                scale: [ 1, 1, 1 ],
+                rotation: [ 0, 0, 0, 0 ]
+            },
+        }),
     ];
 
     // Pass the vertices to WebGL.
@@ -108,8 +110,7 @@
                 // If we have a single color, we expand that into an array
                 // of the same color over and over.
                 objectsToDraw[i].colors = [];
-                for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3;
-                        j < maxj; j += 1) {
+                for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3; j < maxj; j += 1) {
                     objectsToDraw[i].colors = objectsToDraw[i].colors.concat(
                         objectsToDraw[i].color.r,
                         objectsToDraw[i].color.g,
@@ -177,7 +178,11 @@
 
         var currentMatrix = getFinalMatrix(object);
         if (parentMatrix) {
+            var currentMatrix = getFinalMatrix(object, true);
             currentMatrix = currentMatrix.multiply(parentMatrix);
+        }
+        else {
+            var currentMatrix = getFinalMatrix(object, false)
         }
         gl.uniformMatrix4fv(modelViewMatrix, gl.FALSE, currentMatrix.convertToWebGL());
 
@@ -186,12 +191,12 @@
         gl.drawArrays(object.mode, 0, object.vertices.length / 3);
         if (object.children.length > 0) {
             for (var i = 0; i < object.children.length; i++) {
-                    drawObject(object.children[i], currentMatrix);
-                }
+                drawObject(object.children[i], currentMatrix);
+            }
         }
     };
 
-    getFinalMatrix = function (object) {
+    getFinalMatrix = function (object, isChild) {
         var tx = object.instanceTransformation.translation[ 0 ];
         var ty = object.instanceTransformation.translation[ 1 ];
         var tz = object.instanceTransformation.translation[ 2 ];
@@ -202,12 +207,13 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = object.instanceTransformation.rotation[ 0 ];
+        var theta = isChild ? object.instanceTransformation.rotation[ 0 ] :
+            object.instanceTransformation.rotation[ 0 ] + currentRotation;
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
         var rMatrix = new Matrix().rotate(theta, rx, ry, rz);
-        return new Matrix().multiply(tMatrix).multiply(rMatrix).multiply(sMatrix);
+        return new Matrix().multiply(tMatrix).multiply(sMatrix).multiply(rMatrix);
     }
     /*
      * Displays the scene.
