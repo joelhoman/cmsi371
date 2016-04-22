@@ -62,14 +62,24 @@
 
     // Build the objects to display.  Note how each object may come with a
     // rotation axis now.
-   objectsToDraw = [
+    var cuboid = Shape.shape({
+        mode: gl.LINES,
+            vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
+            instanceTransformation: {
+                translation: [ -2, 0, 0 ],
+                scale: [ 1, 1, 1 ],
+                rotation: [ 0, 0, 0, 0 ]
+            },
+        });
+    objectsToDraw = [
         Shape.shape({
             mode: gl.LINES,
             vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
             instanceTransformation: {
                 translation: [ 0, 0, 0 ],
                 scale: [ 1, 1, 1 ],
-                rotation: [ 45, 1, 0, 0 ]
+                rotation: [ 0, 0, 1, 1 ],
+                scale: [ 1, 1, 1 ], 
             },
             children: [
             Shape.shape({
@@ -84,20 +94,12 @@
                 mode: gl.LINES,
                 vertices: (Shape.toRawLineArray(Shape.cuboid(.5, .5, .5))),
                 instanceTransformation: { 
-                    translation: [ 2, 0, 0 ],
+                    translation: [ 3, -1, 0 ],
                 },
             })
             ]
         }),
-        Shape.shape({
-        mode: gl.LINES,
-            vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
-            instanceTransformation: {
-                translation: [ -2, 0, 0 ],
-                scale: [ 1, 1, 1 ],
-                rotation: [ 0, 0, 0, 0 ]
-            },
-        }),
+        cuboid
     ];
 
     // Pass the vertices to WebGL.
@@ -176,13 +178,12 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
-        var currentMatrix = getFinalMatrix(object);
         if (parentMatrix) {
             var currentMatrix = getFinalMatrix(object, true);
-            currentMatrix = currentMatrix.multiply(parentMatrix);
+            currentMatrix = parentMatrix.multiply(currentMatrix);
         }
         else {
-            var currentMatrix = getFinalMatrix(object, false)
+            var currentMatrix = getFinalMatrix(object, false);
         }
         gl.uniformMatrix4fv(modelViewMatrix, gl.FALSE, currentMatrix.convertToWebGL());
 
@@ -207,7 +208,7 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = isChild ? object.instanceTransformation.rotation[ 0 ] :
+        var theta = isChild ? object.instanceTransformation.rotation[ 0 ]:
             object.instanceTransformation.rotation[ 0 ] + currentRotation;
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
@@ -271,10 +272,10 @@
 
         // All clear.
         currentRotation += 0.033 * progress;
-        drawScene();
         if (currentRotation >= 360.0) {
             currentRotation -= 360.0;
         }
+        drawScene();
 
         // Request the next frame.
         previousTimestamp = timestamp;

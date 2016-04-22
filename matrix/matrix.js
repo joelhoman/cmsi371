@@ -85,21 +85,20 @@ var Matrix = (function () {
         var y = y || 0;
         var z = z || 0;
 
-        if (x == y == z == 0) {
+        if (!x && !y && !z) {
             return new Matrix(this.elements, 4, 4);
         }
-        
+
         var axisLength = Math.sqrt((x * x) + (y * y) + (z * z));
-        var s = parseFloat(Math.sin(angle * Math.PI / 180.0).toFixed(4));
-        var c = parseFloat(Math.cos(angle * Math.PI / 180.0).toFixed(4));
+        var s = Math.sin(angle * Math.PI / 180.0);
+        var c = Math.cos(angle * Math.PI / 180.0);
         var oneMinusC = 1.0 - c;
 
-        if (axisLength != 0) {
+        if (axisLength) {
             x /= axisLength;
             y /= axisLength;
             z /= axisLength;
         }
-        
 
         var x2;
         var y2;
