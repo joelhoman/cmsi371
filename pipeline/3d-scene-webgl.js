@@ -21,7 +21,9 @@
 
     // Important state variables.
     var animationActive = false;
-    var currentRotation = 0.0;
+    //var currentRotation = 0.0;
+    var rotationAroundX = 0.0;
+    var rotationAroundY = 0.0;
     var currentInterval;
     var modelViewMatrix;
     var projectionMatrix;
@@ -169,6 +171,8 @@
     // model-view and projection, managed separately.
     modelViewMatrix = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
     projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+    var xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
+    var yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
 
     /*
      * Displays an individual object, including a transformation that now varies
@@ -178,12 +182,9 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
+        var currentMatrix= getFinalMatrix(object);
         if (parentMatrix) {
-            var currentMatrix = getFinalMatrix(object, true);
             currentMatrix = parentMatrix.multiply(currentMatrix);
-        }
-        else {
-            var currentMatrix = getFinalMatrix(object, false);
         }
         gl.uniformMatrix4fv(modelViewMatrix, gl.FALSE, currentMatrix.convertToWebGL());
 
@@ -197,7 +198,7 @@
         }
     };
 
-    getFinalMatrix = function (object, isChild) {
+    getFinalMatrix = function (object) {
         var tx = object.instanceTransformation.translation[ 0 ];
         var ty = object.instanceTransformation.translation[ 1 ];
         var tz = object.instanceTransformation.translation[ 2 ];
@@ -208,8 +209,7 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = isChild ? object.instanceTransformation.rotation[ 0 ]:
-            object.instanceTransformation.rotation[ 0 ] + currentRotation;
+        var theta = object.instanceTransformation.rotation[ 0 ];
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
@@ -222,6 +222,11 @@
     drawScene = function () {
         // Clear the display.
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        var x = new Matrix().rotate(rotationAroundX, 1.0, 0.0, 0.0);
+        var y = new Matrix().rotate(rotationAroundY, 0.0, 1.0, 0.0);
+        gl.uniformMatrix4fv(xRotationMatrix, gl.FALSE, x.convertToWebGL());
+        gl.uniformMatrix4fv(yRotationMatrix, gl.FALSE, y.convertToWebGL());
 
         // Display the objects.
         for (i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
@@ -247,7 +252,13 @@
         10).convertToWebGL()
     );
 
-    // Animation initialization/support.
+    var rotateScene = function (event) {
+        rotationAroundX = xRotationStart - yDragStart + event.clientY;
+        rotationAroundY = yRotationStart - xDragStart + event.clientX;
+        drawScene();
+    };
+
+    /*// Animation initialization/support.
     previousTimestamp = null;
     advanceScene = function (timestamp) {
         // Check if the user has turned things off.
@@ -292,6 +303,23 @@
             previousTimestamp = null;
             window.requestAnimationFrame(advanceScene);
         }
+    });*/
+
+    var xDragStart;
+    var yDragStart;
+    var xRotationStart;
+    var yRotationStart;
+    $(canvas).mousedown(function (event) {
+        xDragStart = event.clientX;
+        yDragStart = event.clientY;
+        xRotationStart = rotationAroundX;
+        yRotationStart = rotationAroundY;
+        $(canvas).mousemove(rotateScene);
+    }).mouseup(function (event) {
+        $(canvas).unbind("mousemove");
     });
+
+    // Draw the initial scene.
+    drawScene();
 
 }(document.getElementById("3d-scene-webgl")));

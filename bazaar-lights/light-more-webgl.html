@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8"/>
+    <title>More Normals and Specular Lighting in WebGL</title>
+    <link rel="stylesheet" href="light-more-webgl.css" />
+  </head>
+  <body>
+    <h1>More Normals and Specular Lighting in WebGL</h1>
+
+    <p>You’ll need a WebGL-capable web browser to see anything here;
+      instructions can be found in this
+      <a href="http://www.khronos.org/webgl/wiki/Getting_a_WebGL_Implementation">official
+      WebGL wiki page</a>.</p>
+
+    <p>This page demonstrates an approach toward automatically generating normals plus the
+      implementation of specular lighting in WebGL.</p>
+
+    <!-- Note the rectangular canvas now. -->
+    <canvas id="light-more-webgl" width="1024" height="512">
+      Sorry, your web browser does not appear to support
+      the <code>canvas</code> element, either.
+    </canvas>
+
+    <!-- jQuery makes some things more convenient. -->
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+    <!-- GLSLUtilities is a starting point for holding functionality that
+         is common to many WebGL programs. -->
+    <script src="glsl-utilities.js"></script>
+
+    <!-- We use our vector library here. -->
+    <script src="../vector/vector.js"></script>
+
+    <!-- Shapes is a library that generates "canned" shapes. -->
+    <script src="shapes.js"></script>
+
+    <!-- Set up shaders: we've placed the source in script elements for
+        simplicity.  Shaders are ideally kept in separate files for easier
+        maintenance, but in that situation, additional code and security
+        constraints are inv
