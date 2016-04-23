@@ -125,6 +125,9 @@
 
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
+            objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
+            objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].normals);
+
             if (objectsToDraw[i].children.length > 0) {
                 prepDrawObjects(objectsToDraw[i].children);
             }

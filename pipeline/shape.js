@@ -10,6 +10,9 @@ $(function(){
 		this.children = shapeSpecs.children || [];
 		this.color = shapeSpecs.color || { r: 0.0, g: 0.0, b: 0.0 };
 		this.vertices = shapeSpecs.vertices || { vertices: [], indices: [] };
+        this.specularColor = shapeSpecs.specularColor || { r: 1.0, g: 1.0, b: 1.0 };
+        this.shininess = shapeSpecs.shininess || 0;
+        this.normals = shapeSpecs.normals || [];
 		this.mode = shapeSpecs.mode || null;
 		return {
 					instanceTransformation: this.instanceTransformation,
