@@ -294,4 +294,4 @@
         }
     });
 
-}(document.getElementById("matrices-webgl")));
+}(document.getElementById("3d-scene-webgl")));
