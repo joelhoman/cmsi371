@@ -211,6 +211,7 @@
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
     var lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
     var shininess = gl.getUniformLocation(shaderProgram, "shininess");
+    var lightAmbient = gl.getUniformLocation(shaderProgram, "lightAmbient");
     /*
      * Displays an individual object, including a transformation that now varies
      * for each object drawn.
@@ -304,9 +305,10 @@
         drawScene();
     };
 
-    gl.uniform4fv(lightPosition, [500.0, 1000.0, 0.0, 1.0]);
-    gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
-    gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
+    gl.uniform4fv(lightPosition, [ 500.0, 1000.0, 0.0, 1.0 ]);
+    gl.uniform3fv(lightDiffuse, [ 1.0, 1.0, 1.0 ]);
+    gl.uniform3fv(lightSpecular, [ 1.0, 1.0, 1.0 ]);
+    gl.uniform3fv(lightAmbient, [ 0.5, 0.5, 0.5 ]);
 
     var xDragStart;
     var yDragStart;
