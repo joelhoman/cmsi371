@@ -21,7 +21,7 @@
 
     // Important state variables.
     var animationActive = false;
-    //var currentRotation = 0.0;
+    var currentRotation = 0.0;
     var rotationAroundX = 0.0;
     var rotationAroundY = 0.0;
     var currentInterval;
@@ -256,7 +256,7 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = object.instanceTransformation.rotation[ 0 ];
+        var theta = object.instanceTransformation.rotation[ 0 ] + currentRotation;
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
@@ -305,10 +305,54 @@
         drawScene();
     };
 
-    gl.uniform4fv(lightPosition, [ 500.0, 1000.0, 0.0, 1.0 ]);
+    gl.uniform4fv(lightPosition, [ 0.0, 0.0, 10.0, 1.0 ]);
     gl.uniform3fv(lightDiffuse, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightSpecular, [ 1.0, 1.0, 1.0 ]);
-    gl.uniform3fv(lightAmbient, [ 0.5, 0.5, 0.5 ]);
+    gl.uniform3fv(lightAmbient, [ 0.3, 0.3, 0.3 ]);
+
+    // Animation initialization/support.
+    previousTimestamp = null;
+    advanceScene = function (timestamp) {
+        // Check if the user has turned things off.
+        if (!animationActive) {
+            return;
+        }
+
+        // Initialize the timestamp.
+        if (!previousTimestamp) {
+            previousTimestamp = timestamp;
+            window.requestAnimationFrame(advanceScene);
+            return;
+        }
+
+        // Check if it's time to advance.
+        var progress = timestamp - previousTimestamp;
+        if (progress < 30) {
+            // Do nothing if it's too soon.
+            window.requestAnimationFrame(advanceScene);
+            return;
+        }
+
+        // All clear.
+        currentRotation += 0.033 * progress;
+        drawScene();
+        if (currentRotation >= 360.0) {
+            currentRotation -= 360.0;
+        }
+
+        // Request the next frame.
+        previousTimestamp = timestamp;
+        window.requestAnimationFrame(advanceScene);
+    };
+
+    // Set up the rotation toggle: clicking on the canvas does it.
+    $(canvas).click(function () {
+        animationActive = !animationActive;
+        if (animationActive) {
+            previousTimestamp = null;
+            window.requestAnimationFrame(advanceScene);
+        }
+    });
 
     var xDragStart;
     var yDragStart;

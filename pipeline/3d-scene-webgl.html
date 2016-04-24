@@ -61,7 +61,7 @@
       void main(void) {
           // We "merely" relay these vectors to the fragment shader.  However,
           // we get a cool trick: they get interpolated for us!
-          fragmentNormal = normalVector;
+          fragmentNormal = vec3(modelViewMatrix * vec4(normalVector, 1.0));
           fragmentEye = vertexPosition;
           fragmentLight = lightPosition.xyz;
           // No conditional expressions in GLSL, unfortunately.  We have to
