@@ -133,9 +133,24 @@
                 }
             }
 
+            if (!objectsToDraw[i].specularColors) {
+                // Future refactor: helper function to convert a single value or
+                // array into an array of copies of itself.
+                objectsToDraw[i].specularColors = [];
+                for (var j = 0, maxj = objectsToDraw[i].vertices.length / 3; j < maxj; j += 1) {
+                    objectsToDraw[i].specularColors = objectsToDraw[i].specularColors.concat(
+                        objectsToDraw[i].specularColor.r,
+                        objectsToDraw[i].specularColor.g,
+                        objectsToDraw[i].specularColor.b
+                    );
+                }
+            }
+            objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl,
+                objectsToDraw[i].specularColors);
+
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
-                    objectsToDraw[i].colors);
-            //objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
+                objectsToDraw[i].colors);
+            
             objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
                 objectsToDraw[i].normals);
 
@@ -178,35 +193,37 @@
     // Hold on to the important variables within the shaders.
     var vertexPosition = gl.getAttribLocation(shaderProgram, "vertexPosition");
     gl.enableVertexAttribArray(vertexPosition);
-    var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
-    gl.enableVertexAttribArray(vertexColor);
+    var vertexDiffuseColor = gl.getAttribLocation(shaderProgram, "vertexDiffuseColor");
+    gl.enableVertexAttribArray(vertexDiffuseColor);
+    var vertexSpecularColor = gl.getAttribLocation(shaderProgram, "vertexSpecularColor");
+    gl.enableVertexAttribArray(vertexSpecularColor);
     var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
     gl.enableVertexAttribArray(normalVector);
 
     // Finally, we come to the typical setup for transformation matrices:
     // model-view and projection, managed separately.
-    modelViewMatrix = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
-    projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
+    var modelViewMatrix = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
+    var projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     var xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
     var yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
 
     var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
     var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
-    //var lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
-    //var shininess = gl.getUniformLocation(shaderProgram, "shininess");
+    var lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
+    var shininess = gl.getUniformLocation(shaderProgram, "shininess");
     /*
      * Displays an individual object, including a transformation that now varies
      * for each object drawn.
      */
     drawObject = function (object, parentMatrix) {
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
-        gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(vertexDiffuseColor, 3, gl.FLOAT, false, 0, 0);
 
-        //gl.bindBuffer(gl.ARRAY_BUFFER, object.specularBuffer);
-        //gl.vertexAttribPointer(vertexSpecularColor, 3, gl.FLOAT, false, 0, 0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.specularBuffer);
+        gl.vertexAttribPointer(vertexSpecularColor, 3, gl.FLOAT, false, 0, 0);
 
         // Set the shininess.
-        //gl.uniform1f(shininess, object.shininess);
+        gl.uniform1f(shininess, object.shininess);
 
         var currentMatrix= getFinalMatrix(object);
         if (parentMatrix) {
@@ -287,55 +304,9 @@
         drawScene();
     };
 
-    /*// Animation initialization/support.
-    previousTimestamp = null;
-    advanceScene = function (timestamp) {
-        // Check if the user has turned things off.
-        if (!animationActive) {
-            return;
-        }
-
-        // Initialize the timestamp.
-        if (!previousTimestamp) {
-            previousTimestamp = timestamp;
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
-
-        // Check if it's time to advance.
-        var progress = timestamp - previousTimestamp;
-        if (progress < 30) {
-            // Do nothing if it's too soon.
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
-
-        // All clear.
-        currentRotation += 0.033 * progress;
-        if (currentRotation >= 360.0) {
-            currentRotation -= 360.0;
-        }
-        drawScene();
-
-        // Request the next frame.
-        previousTimestamp = timestamp;
-        window.requestAnimationFrame(advanceScene);
-    };
-
-    // Draw the initial scene.
-    drawScene();
-
-    // Set up the rotation toggle: clicking on the canvas does it.
-    $(canvas).click(function () {
-        animationActive = !animationActive;
-        if (animationActive) {
-            previousTimestamp = null;
-            window.requestAnimationFrame(advanceScene);
-        }
-    });*/
-
-    gl.uniform3fv(lightPosition, [0.0, 0.0, 5.0]);
+    gl.uniform4fv(lightPosition, [500.0, 1000.0, 0.0, 1.0]);
     gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
+    gl.uniform3fv(lightSpecular, [1.0, 1.0, 1.0]);
 
     var xDragStart;
     var yDragStart;
