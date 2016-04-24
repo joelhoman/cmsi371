@@ -19,6 +19,9 @@ $(function(){
 					children: this.children,
 					color: this.color,
 					vertices: this.vertices,
+                    specularColor: this.specularColor,
+                    shininess: this.shininess,
+                    normals: this.normals,
 					mode: this.mode,
 			   }
 	};

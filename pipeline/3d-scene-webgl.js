@@ -64,51 +64,61 @@
 
     // Build the objects to display.  Note how each object may come with a
     // rotation axis now.
-    var cuboid = Shape.shape({
-        mode: gl.LINES,
-            vertices: (Shape.toRawLineArray(Shape.cuboid(.75, .75, .75))),
-            instanceTransformation: {
-                translation: [ -2, 0, 0 ],
-                scale: [ 1, 1, 1 ],
-                rotation: [ 0, 0, 0, 0 ]
-            },
-        });
+    var cylinderMesh = Shape.cylinder(20);
+    var sphereMesh = Shape.sphere(20);
+    var cuboidMesh = Shape.cuboid(0.5, 0.5, 0.5);
     objectsToDraw = [
         Shape.shape({
-            mode: gl.LINES,
-            vertices: (Shape.toRawLineArray(Shape.cylinder(20))),
+            mode: gl.TRIANGLES,
+            vertices: Shape.toRawTriangleArray(cylinderMesh),
             instanceTransformation: {
                 translation: [ 0, 0, 0 ],
                 scale: [ 1, 1, 1 ],
                 rotation: [ 0, 0, 1, 1 ],
                 scale: [ 1, 1, 1 ], 
             },
+            color: { r: 1.0 , g: 0.0, b: 0.0 },
+            normals: Shape.toVertexNormalArray(cylinderMesh),
             children: [
             Shape.shape({
-                mode: gl.LINES,
-                vertices: (Shape.toRawLineArray(Shape.sphere(20))),
+                mode: gl.TRIANGLES,
+                vertices: Shape.toRawTriangleArray(sphereMesh),
                 instanceTransformation: {
-                translation: [ 1, 1, 0 ],
-                scale: [ 1, 1, 1 ],
-            },
+                    translation: [ 1, 1, 0 ],
+                    scale: [ 1, 1, 1 ],
+                },
+                color: { r: 1.0, g: 1.0, b: 0.0 },
+                normals: Shape.toVertexNormalArray(sphereMesh),
             }),
             Shape.shape({
-                mode: gl.LINES,
-                vertices: (Shape.toRawLineArray(Shape.cuboid(.5, .5, .5))),
+                mode: gl.TRIANGLES,
+                vertices: Shape.toRawTriangleArray(cuboidMesh),
                 instanceTransformation: { 
                     translation: [ 3, -1, 0 ],
                 },
+                color: { r: 1.0, g: 1.0, b: 0.0 },
+                normals: Shape.toVertexNormalArray(cuboidMesh),
             })
             ]
         }),
-        cuboid
+        Shape.shape({
+        mode: gl.TRIANGLES,
+            vertices: Shape.toRawTriangleArray(cuboidMesh),
+            instanceTransformation: {
+                translation: [ -2, 0, 0 ],
+                scale: [ 1, 1, 1 ],
+                rotation: [ 0, 0, 0, 0 ]
+            },
+            color : { r: 0.0, g: 0.0, b: 1.0 },
+            normals: Shape.toVertexNormalArray(cuboidMesh),
+        }),
     ];
 
     // Pass the vertices to WebGL.
     var prepDrawObjects = function (objectsToDraw) {
         for (var i = 0, maxi = objectsToDraw.length; i < maxi; i += 1) {
             objectsToDraw[i].buffer = GLSLUtilities.initVertexBuffer(gl,
-                    objectsToDraw[i].vertices);
+                objectsToDraw[i].vertices);
 
             if (!objectsToDraw[i].colors) {
                 // If we have a single color, we expand that into an array
@@ -125,8 +135,9 @@
 
             objectsToDraw[i].colorBuffer = GLSLUtilities.initVertexBuffer(gl,
                     objectsToDraw[i].colors);
-            objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
-            objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].normals);
+            //objectsToDraw[i].specularBuffer = GLSLUtilities.initVertexBuffer(gl, objectsToDraw[i].specularColors);
+            objectsToDraw[i].normalBuffer = GLSLUtilities.initVertexBuffer(gl,
+                objectsToDraw[i].normals);
 
             if (objectsToDraw[i].children.length > 0) {
                 prepDrawObjects(objectsToDraw[i].children);
@@ -165,10 +176,12 @@
     gl.useProgram(shaderProgram);
 
     // Hold on to the important variables within the shaders.
-    vertexPosition = gl.getAttribLocation(shaderProgram, "vertexPosition");
+    var vertexPosition = gl.getAttribLocation(shaderProgram, "vertexPosition");
     gl.enableVertexAttribArray(vertexPosition);
-    vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
+    var vertexColor = gl.getAttribLocation(shaderProgram, "vertexColor");
     gl.enableVertexAttribArray(vertexColor);
+    var normalVector = gl.getAttribLocation(shaderProgram, "normalVector");
+    gl.enableVertexAttribArray(normalVector);
 
     // Finally, we come to the typical setup for transformation matrices:
     // model-view and projection, managed separately.
@@ -177,6 +190,10 @@
     var xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
     var yRotationMatrix = gl.getUniformLocation(shaderProgram, "yRotationMatrix");
 
+    var lightPosition = gl.getUniformLocation(shaderProgram, "lightPosition");
+    var lightDiffuse = gl.getUniformLocation(shaderProgram, "lightDiffuse");
+    //var lightSpecular = gl.getUniformLocation(shaderProgram, "lightSpecular");
+    //var shininess = gl.getUniformLocation(shaderProgram, "shininess");
     /*
      * Displays an individual object, including a transformation that now varies
      * for each object drawn.
@@ -185,11 +202,20 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, object.colorBuffer);
         gl.vertexAttribPointer(vertexColor, 3, gl.FLOAT, false, 0, 0);
 
+        //gl.bindBuffer(gl.ARRAY_BUFFER, object.specularBuffer);
+        //gl.vertexAttribPointer(vertexSpecularColor, 3, gl.FLOAT, false, 0, 0);
+
+        // Set the shininess.
+        //gl.uniform1f(shininess, object.shininess);
+
         var currentMatrix= getFinalMatrix(object);
         if (parentMatrix) {
             currentMatrix = parentMatrix.multiply(currentMatrix);
         }
         gl.uniformMatrix4fv(modelViewMatrix, gl.FALSE, currentMatrix.convertToWebGL());
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, object.normalBuffer);
+        gl.vertexAttribPointer(normalVector, 3, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, object.buffer);
         gl.vertexAttribPointer(vertexPosition, 3, gl.FLOAT, false, 0, 0);
@@ -307,6 +333,9 @@
             window.requestAnimationFrame(advanceScene);
         }
     });*/
+
+    gl.uniform3fv(lightPosition, [0.0, 0.0, 5.0]);
+    gl.uniform3fv(lightDiffuse, [1.0, 1.0, 1.0]);
 
     var xDragStart;
     var yDragStart;
