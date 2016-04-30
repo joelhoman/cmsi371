@@ -154,6 +154,25 @@ var Matrix = (function () {
         return p;
     };
 
+    matrix.prototype.lookAt = function (px, py, pz, qx, qy, qz, ux, uy, uz) {
+        var p = new Vector(px, py, pz);
+        var q = new Vector(qx, qy, qz);
+        var up = new Vector(ux, uy, uz);
+        var ze = p.subtract(q);
+        var ye = up.subtract(up.projection(ze));
+        var xe = ye.cross(ze);
+        var pxe = -1 * (p.dot(xe));
+        var pye = -1 * (p.dot(ye));
+        var pze = -1 * (p.dot(ze));
+        var view = new Matrix([
+            xe.x(), xe.y(), xe.z(), pxe,
+            ye.x(), ye.y(), ye.z(), pye,
+            ze.x(), ze.y(), ze.z(), pze,
+            0, 0, 0, 1
+        ], 4, 4);
+        return view;
+    };
+
     matrix.prototype.convertToWebGL = function () {
         var result = new Float32Array([
             this.elements[0],

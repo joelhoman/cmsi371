@@ -43,6 +43,7 @@
       attribute vec3 vertexSpecularColor;
       attribute vec3 normalVector;
       // The should-now-be-familiar matrices.
+      uniform mat4 viewportMatrix;
       uniform mat4 projectionMatrix;
       uniform mat4 modelViewMatrix;
       uniform mat4 xRotationMatrix;
@@ -75,7 +76,7 @@
           fragmentSpecularColor = vertexSpecularColor;
           gl_Position = projectionMatrix *
                   xRotationMatrix * yRotationMatrix *
-                  modelViewMatrix * vec4(vertexPosition, 1.0);
+                  viewportMatrix * modelViewMatrix * vec4(vertexPosition, 1.0);
       }
     </script>
 

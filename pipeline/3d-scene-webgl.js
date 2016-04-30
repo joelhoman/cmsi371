@@ -202,6 +202,7 @@
 
     // Finally, we come to the typical setup for transformation matrices:
     // model-view and projection, managed separately.
+    var viewportMatrix = gl.getUniformLocation(shaderProgram, "viewportMatrix");
     var modelViewMatrix = gl.getUniformLocation(shaderProgram, "modelViewMatrix");
     var projectionMatrix = gl.getUniformLocation(shaderProgram, "projectionMatrix");
     var xRotationMatrix = gl.getUniformLocation(shaderProgram, "xRotationMatrix");
@@ -290,6 +291,9 @@
     // We keep the vertical range fixed, but change the horizontal range
     // according to the aspect ratio of the canvas.  We can also expand
     // the z range now.
+    gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
+        -2, 0, 0, 0, 0, -1, 0, 1, 0).convertToWebGL());
+
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
         2 * (canvas.width / canvas.height),
         -2 * (canvas.width / canvas.height),
