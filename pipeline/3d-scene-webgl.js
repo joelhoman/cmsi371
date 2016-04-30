@@ -72,7 +72,7 @@
             mode: gl.TRIANGLES,
             vertices: Shape.toRawTriangleArray(cylinderMesh),
             instanceTransformation: {
-                translation: [ 0, 0, 0 ],
+                translation: [ 0, 0, -5 ],
                 scale: [ 1, 1, 1 ],
                 rotation: [ 0, 0, 1, 1 ],
                 scale: [ 1, 1, 1 ], 
@@ -105,7 +105,7 @@
         mode: gl.TRIANGLES,
             vertices: Shape.toRawTriangleArray(cuboidMesh),
             instanceTransformation: {
-                translation: [ -2, 0, 0 ],
+                translation: [ -2, 0, -5 ],
                 scale: [ 1, 1, 1 ],
                 rotation: [ 0, 0, 0, 0 ]
             },
@@ -290,13 +290,13 @@
     // We keep the vertical range fixed, but change the horizontal range
     // according to the aspect ratio of the canvas.  We can also expand
     // the z range now.
-    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().orthographicProjection(
-        -2 * (canvas.width / canvas.height),
+    gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
         2 * (canvas.width / canvas.height),
-        -2,
+        -2 * (canvas.width / canvas.height),
         2,
-        -10,
-        10).convertToWebGL()
+        -2,
+        -2,
+        2).convertToWebGL()
     );
 
     var rotateScene = function (event) {
@@ -305,7 +305,7 @@
         drawScene();
     };
 
-    gl.uniform4fv(lightPosition, [ 0.0, 0.0, 10.0, 1.0 ]);
+    gl.uniform4fv(lightPosition, [ 0.0, 5.0, -5.0, 1.0 ]);
     gl.uniform3fv(lightDiffuse, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightSpecular, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightAmbient, [ 0.3, 0.3, 0.3 ]);
