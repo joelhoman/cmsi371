@@ -21,9 +21,10 @@
 
     // Important state variables.
     var animationActive = false;
-    var currentRotation = 0.0;
     var rotationAroundX = 0.0;
     var rotationAroundY = 0.0;
+    var xCoordinate = 0.0;
+    var zCoordinate = 0.0;
     var currentInterval;
     var modelViewMatrix;
     var projectionMatrix;
@@ -257,7 +258,7 @@
         var sz = object.instanceTransformation.scale[ 2 ];
         var sMatrix = new Matrix().scale(sx, sy, sz);
 
-        var theta = object.instanceTransformation.rotation[ 0 ] + currentRotation;
+        var theta = object.instanceTransformation.rotation[ 0 ];
         var rx = object.instanceTransformation.rotation[ 1 ];
         var ry = object.instanceTransformation.rotation[ 2 ];
         var rz = object.instanceTransformation.rotation[ 3 ];
@@ -281,6 +282,17 @@
             drawObject(objectsToDraw[i]);
         }
 
+        gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
+        xCoordinate, 0, zCoordinate, 0, 0, -1, 0, 1, 0).convertToWebGL());
+
+        gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
+            2 * (canvas.width / canvas.height),
+            -2 * (canvas.width / canvas.height),
+            2 + xCoordinate,
+            -2 + xCoordinate,
+            -2 + zCoordinate,
+            2 + zCoordinate).convertToWebGL()
+        );
         // All done.
         gl.flush();
     };
@@ -292,7 +304,7 @@
     // according to the aspect ratio of the canvas.  We can also expand
     // the z range now.
     gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
-        -2, 0, 0, 0, 0, -1, 0, 1, 0).convertToWebGL());
+        0, 0, 0, 0, 0, -1, 0, 1, 0).convertToWebGL());
 
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
         2 * (canvas.width / canvas.height),
@@ -314,50 +326,6 @@
     gl.uniform3fv(lightSpecular, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightAmbient, [ 0.3, 0.3, 0.3 ]);
 
-    // Animation initialization/support.
-    previousTimestamp = null;
-    advanceScene = function (timestamp) {
-        // Check if the user has turned things off.
-        if (!animationActive) {
-            return;
-        }
-
-        // Initialize the timestamp.
-        if (!previousTimestamp) {
-            previousTimestamp = timestamp;
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
-
-        // Check if it's time to advance.
-        var progress = timestamp - previousTimestamp;
-        if (progress < 30) {
-            // Do nothing if it's too soon.
-            window.requestAnimationFrame(advanceScene);
-            return;
-        }
-
-        // All clear.
-        currentRotation += 0.033 * progress;
-        drawScene();
-        if (currentRotation >= 360.0) {
-            currentRotation -= 360.0;
-        }
-
-        // Request the next frame.
-        previousTimestamp = timestamp;
-        window.requestAnimationFrame(advanceScene);
-    };
-
-    // Set up the rotation toggle: clicking on the canvas does it.
-    $(canvas).click(function () {
-        animationActive = !animationActive;
-        if (animationActive) {
-            previousTimestamp = null;
-            window.requestAnimationFrame(advanceScene);
-        }
-    });
-
     var xDragStart;
     var yDragStart;
     var xRotationStart;
@@ -371,6 +339,21 @@
     }).mouseup(function (event) {
         $(canvas).unbind("mousemove");
     });
+
+    var movementSpeed = .005;
+    window.addEventListener("keypress", keyDown, false);
+    function keyDown (e) {
+        if (e.keyCode == 119) {
+            zCoordinate -= movementSpeed;
+        } else if (e.keyCode == 115) {
+            zCoordinate += movementSpeed;
+        } else if (e.keyCode == 100) {
+            xCoordinate -= movementSpeed;
+        } else if (e.keyCode == 97) {
+            xCoordinate += movementSpeed;
+        }
+        drawScene();
+    }
 
     // Draw the initial scene.
     drawScene();
