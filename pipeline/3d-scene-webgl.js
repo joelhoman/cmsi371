@@ -23,8 +23,8 @@
     var animationActive = false;
     var rotationAroundX = 0.0;
     var rotationAroundY = 0.0;
-    var xCoordinate = 0.0;
-    var zCoordinate = 0.0;
+    var xCoordinate = 0;
+    var zCoordinate = 3;
     var currentInterval;
     var modelViewMatrix;
     var projectionMatrix;
@@ -66,54 +66,124 @@
     // Build the objects to display.  Note how each object may come with a
     // rotation axis now.
     var cylinderMesh = Shape.cylinder(20);
-    var sphereMesh = Shape.sphere(20);
-    var cuboidMesh = Shape.cuboid(0.5, 0.5, 0.5);
-    objectsToDraw = [
-        Shape.shape({
-            mode: gl.TRIANGLES,
-            vertices: Shape.toRawTriangleArray(cylinderMesh),
-            instanceTransformation: {
-                translation: [ 0, 0, -5 ],
-                scale: [ 1, 1, 1 ],
-                rotation: [ 0, 0, 1, 1 ],
-                scale: [ 1, 1, 1 ], 
-            },
-            color: { r: 1.0 , g: 0.0, b: 0.0 },
-            normals: Shape.toVertexNormalArray(cylinderMesh),
-            children: [
+    var sphereMesh = Shape.sphere(30);
+    var cuboidMesh = Shape.cuboid(1.0, 1.0, 1.0);
+    var groundMesh = Shape.cuboid(1.0, 0.2, 1.0);
+    var clockMesh = Shape.cylinder(30);
+    var handMesh = Shape.cuboid(0.05, 0.1, 1.0);
+    var distanceAway = 10; 
+
+    var ground = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(groundMesh),
+        instanceTransformation: {
+            scale: [ 400, 1, 400 ],
+            translation: [ 0, 20, 0 ]
+        },
+        color: { r: .1, g: 1.0, b: 0.0 },
+        normals: Shape.toVertexNormalArray(groundMesh)
+    });
+
+    var roof = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(groundMesh),
+        instanceTransformation: {
+            scale: [ 20, 1, 20 ],
+            translation: [ 0, 5, 0 ]
+        },
+        color: { r: .1, g: 1.0, b: 0.0 },
+        normals: Shape.toVertexNormalArray(groundMesh)
+    });
+
+    var dome = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(sphereMesh),
+        instanceTransformation: {
+            scale: [ .5, .5, .5 ],
+            translation: [ 0, 0, 0 ]
+        },
+        color: { r: 0.55, g: 0.5, b: 0.4 },
+        normals: Shape.toVertexNormalArray(sphereMesh)
+    });
+
+    var wall1 = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(cuboidMesh),
+        instanceTransformation: {
+            scale: [ 20, 20, 20 ],
+            translation: [ 0, 0, distanceAway ]
+        },
+        color: { r: .1, g: 1.0, b: 0.0 },
+        normals: Shape.toVertexNormalArray(cuboidMesh)
+    });
+
+    var wall2 = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(cuboidMesh),
+        instanceTransformation: {
+            scale: [ 20, 20, 20 ],
+            translation: [ 0, 0, -distanceAway ]
+        },
+        color: { r: .1, g: 1.0, b: 0.0 },
+        normals: Shape.toVertexNormalArray(cuboidMesh)
+    });
+
+    var wall3 = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(cuboidMesh),
+        instanceTransformation: {
+            scale: [ 20, 20, 20 ],
+            translation: [ distanceAway, 0, 0]
+        },
+        color: { r: .1, g: 1.0, b: 0.0 },
+        normals: Shape.toVertexNormalArray(cuboidMesh)
+    });
+
+    var wall4 = Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(cuboidMesh),
+        instanceTransformation: {
+            scale: [ 20, 20, 20 ],
+            translation: [ -distanceAway, 0, 0 ]
+        },
+        color: { r: .1, g: 1.0, b: 0.0 },
+        normals: Shape.toVertexNormalArray(cuboidMesh)
+    });
+
+    var clock = new Shape.shape({
+        mode: gl.TRIANGLES,
+        vertices: Shape.toRawTriangleArray(clockMesh),
+        instanceTransformation: {
+            scale: [ 5, 5, 5 ],
+            translation: [ 0, 0, -15 ],
+            rotation: [ 90, 1, 0, 0 ]
+        },
+        color: { r: 1.0, g: 0.65, b: 0.0 },
+        normals: Shape.toVertexNormalArray(clockMesh),
+        children: [
             Shape.shape({
-                mode: gl.TRIANGLES,
+                mode: gl.TRIANGLES, 
                 vertices: Shape.toRawTriangleArray(sphereMesh),
                 instanceTransformation: {
-                    translation: [ 1, 1, 0 ],
-                    scale: [ 1, 1, 1 ],
+                    scale: [ 0.2, 0.2, 0.2 ],
+                    translation: [ 0, -20, 0 ],
                 },
-                color: { r: 1.0, g: 1.0, b: 0.0 },
-                normals: Shape.toVertexNormalArray(sphereMesh),
+                color: { r: 0.1, g: 0.0, b: 0.0 },
+                normals: Shape.toVertexNormalArray(sphereMesh)
             }),
             Shape.shape({
                 mode: gl.TRIANGLES,
-                vertices: Shape.toRawTriangleArray(cuboidMesh),
-                instanceTransformation: { 
-                    translation: [ 3, -1, 0 ],
+                vertices: Shape.toRawTriangleArray(handMesh),
+                instanceTransformation: {
+                    translation: [ 0, -10, .5 ],
                 },
-                color: { r: 1.0, g: 1.0, b: 0.0 },
-                normals: Shape.toVertexNormalArray(cuboidMesh),
+                color: { r: 0.1, g: 0.0, b: 0.0 },
+                normals: Shape.toVertexNormalArray(handMesh)
             })
-            ]
-        }),
-        Shape.shape({
-        mode: gl.TRIANGLES,
-            vertices: Shape.toRawTriangleArray(cuboidMesh),
-            instanceTransformation: {
-                translation: [ -2, 0, -5 ],
-                scale: [ 1, 1, 1 ],
-                rotation: [ 0, 0, 0, 0 ]
-            },
-            color : { r: 0.0, g: 0.0, b: 1.0 },
-            normals: Shape.toVertexNormalArray(cuboidMesh),
-        }),
-    ];
+        ]
+    });
+
+    objectsToDraw = [ ground, clock ];
 
     // Pass the vertices to WebGL.
     var prepDrawObjects = function (objectsToDraw) {
@@ -282,17 +352,17 @@
             drawObject(objectsToDraw[i]);
         }
 
-        gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
-        xCoordinate, 0, zCoordinate, 0, 0, -1, 0, 1, 0).convertToWebGL());
+       /* gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
+        -xCoordinate, 0, -zCoordinate, xCoordinate, 0, zCoordinate - 1, 0, 1, 0).convertToWebGL());
 
         gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
             2 * (canvas.width / canvas.height),
             -2 * (canvas.width / canvas.height),
-            2 + xCoordinate,
-            -2 + xCoordinate,
-            -2 + zCoordinate,
-            2 + zCoordinate).convertToWebGL()
-        );
+            1,
+            -1,
+            -2,
+            2).convertToWebGL()
+        );*/
         // All done.
         gl.flush();
     };
@@ -304,15 +374,15 @@
     // according to the aspect ratio of the canvas.  We can also expand
     // the z range now.
     gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
-        0, 0, 0, 0, 0, -1, 0, 1, 0).convertToWebGL());
+        0, 0, 0, 0, 0, 1, 0, 1, 0).convertToWebGL());
 
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
-        2 * (canvas.width / canvas.height),
         -2 * (canvas.width / canvas.height),
+        2 * (canvas.width / canvas.height),
+        -2,
         2,
-        -2,
-        -2,
-        2).convertToWebGL()
+        -10,
+        10).convertToWebGL()
     );
 
     var rotateScene = function (event) {
@@ -321,10 +391,10 @@
         drawScene();
     };
 
-    gl.uniform4fv(lightPosition, [ 0.0, 5.0, -5.0, 1.0 ]);
+    gl.uniform4fv(lightPosition, [ 5.0, 20.0, -15.0, 1.0 ]);
     gl.uniform3fv(lightDiffuse, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightSpecular, [ 1.0, 1.0, 1.0 ]);
-    gl.uniform3fv(lightAmbient, [ 0.3, 0.3, 0.3 ]);
+    gl.uniform3fv(lightAmbient, [ 0.1, 0.1, 0.1 ]);
 
     var xDragStart;
     var yDragStart;
@@ -340,20 +410,20 @@
         $(canvas).unbind("mousemove");
     });
 
-    var movementSpeed = .005;
+   /* var movementSpeed = .01;
     window.addEventListener("keypress", keyDown, false);
     function keyDown (e) {
         if (e.keyCode == 119) {
             zCoordinate -= movementSpeed;
-        } else if (e.keyCode == 115) {
-            zCoordinate += movementSpeed;
+        } else if(e.keyCode == 115) {
+            zCoordinate -= movementSpeed;
         } else if (e.keyCode == 100) {
-            xCoordinate -= movementSpeed;
-        } else if (e.keyCode == 97) {
             xCoordinate += movementSpeed;
+        } else if (e.keyCode == 97) {
+            xCoordinate -= movementSpeed;
         }
         drawScene();
-    }
+    }*/
 
     // Draw the initial scene.
     drawScene();
