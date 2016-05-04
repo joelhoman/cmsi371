@@ -152,7 +152,7 @@
         mode: gl.TRIANGLES,
         vertices: Shape.toRawTriangleArray(cylinderMesh),
         instanceTransformation: {
-            translation: [ 10, 0, 0 ],
+            translation: [ distanceAway, 0, 0 ],
             scale: [ 5, 5, 5 ],
         },
         color: { r: 0.75, g: 0.1, b: 1.0 },
@@ -163,7 +163,7 @@
         mode: gl.TRIANGLES,
         vertices: Shape.toRawTriangleArray(cylinderMesh),
         instanceTransformation: {
-            translation: [ -10, 0, 0 ],
+            translation: [ -distanceAway, 0, 0 ],
             scale: [ 5, 5, 5 ],
         },
         color: { r: 0.75, g: 0.1, b: 1.0 },
@@ -174,7 +174,7 @@
         mode: gl.TRIANGLES,
         vertices: Shape.toRawTriangleArray(cylinderMesh),
         instanceTransformation: {
-            translation: [ 10, 0, 10 ],
+            translation: [ distanceAway, 0, distanceAway ],
             scale: [ 5, 5, 5 ],
         },
         color: { r: 0.75, g: 0.1, b: 1.0 },
@@ -185,7 +185,7 @@
         mode: gl.TRIANGLES,
         vertices: Shape.toRawTriangleArray(cylinderMesh),
         instanceTransformation: {
-            translation: [ 10, 0, -10 ],
+            translation: [ distanceAway, 0, -distanceAway ],
             scale: [ 5, 5, 5 ],
         },
         color: { r: 0.75, g: 0.1, b: 1.0 },
@@ -196,7 +196,7 @@
         mode: gl.TRIANGLES,
         vertices: Shape.toRawTriangleArray(cylinderMesh),
         instanceTransformation: {
-            translation: [ -10, 0, 10 ],
+            translation: [ -distanceAway, 0, distanceAway ],
             scale: [ 5, 5, 5 ],
         },
         color: { r: 0.75, g: 0.1, b: 1.0 },
@@ -207,7 +207,7 @@
         mode: gl.TRIANGLES,
         vertices: Shape.toRawTriangleArray(cylinderMesh),
         instanceTransformation: {
-            translation: [ -10, 0, -10 ],
+            translation: [ -distanceAway, 0, -distanceAway ],
             scale: [ 5, 5, 5 ],
         },
         color: { r: 0.75, g: 0.1, b: 1.0 },
@@ -383,9 +383,9 @@
             drawObject(objectsToDraw[i]);
         }
 
-        gl.uniform4fv(lightPosition, [ 5.0, 20.0, zCoordinate, 1.0 ]);
+        gl.uniform4fv(lightPosition, [ 0.0, 30.0, zCoordinate, 1.0 ]);
         gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
-            0, 0, zCoordinate, 0, 0, zCoordinate - 1, 0, 1, 0).convertToWebGL());
+            0, 0, zCoordinate, 0, 0, zCoordinate - 1, 0, 1, zCoordinate).convertToWebGL());
 
         // All done.
         gl.flush();
@@ -398,7 +398,7 @@
     // according to the aspect ratio of the canvas.  We can also expand
     // the z range now.
     gl.uniformMatrix4fv(viewportMatrix, gl.FALSE, new Matrix().lookAt(
-        0, 0, zCoordinate, 0, 0, 1, 0, 1, 0).convertToWebGL());
+        0, 0, zCoordinate, 0, 0, zCoordinate - 1, 0, 1, zCoordinate).convertToWebGL());
 
     gl.uniformMatrix4fv(projectionMatrix, gl.FALSE, new Matrix().perspectiveProjection(
         -2 * (canvas.width / canvas.height),
@@ -415,7 +415,7 @@
         drawScene();
     };
 
-    gl.uniform4fv(lightPosition, [ 5.0, 20.0, zCoordinate, 1.0 ]);
+    gl.uniform4fv(lightPosition, [ 0.0, 30.0, zCoordinate, 1.0 ]);
     gl.uniform3fv(lightDiffuse, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightSpecular, [ 1.0, 1.0, 1.0 ]);
     gl.uniform3fv(lightAmbient, [ 0.1, 0.1, 0.1 ]);
@@ -435,7 +435,7 @@
     });
 
     var movementSpeed = .1;
-    var walkLimit = 150
+    var walkLimit = 5;
     window.addEventListener("keypress", keyDown, false);
     function keyDown (e) {
         if (e.keyCode == 119 && zCoordinate >= -walkLimit) {
@@ -443,6 +443,7 @@
         } else if(e.keyCode == 115 && zCoordinate <= walkLimit) {
             zCoordinate += movementSpeed;
         }
+        console.log(zCoordinate);
         drawScene();
     }
 

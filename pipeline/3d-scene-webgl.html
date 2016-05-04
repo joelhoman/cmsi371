@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="3d-scene-webgl.css" />
   </head>
   <body>
-
+    <p>Press W and S to move forwards and backwards.  Move the Mouse to look around!<p>
     <p>You’ll need a WebGL-capable web browser to see anything here;
       instructions can be found in this
       <a href="http://www.khronos.org/webgl/wiki/Getting_a_WebGL_Implementation">official
@@ -76,7 +76,7 @@
           fragmentSpecularColor = vertexSpecularColor;
           gl_Position = projectionMatrix * 
             xRotationMatrix * yRotationMatrix * 
-            /*viewportMatrix **/ modelViewMatrix * vec4(vertexPosition, 1.0);
+            viewportMatrix * modelViewMatrix * vec4(vertexPosition, 1.0);
       }
     </script>
 
